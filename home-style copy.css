@@ -1,0 +1,197 @@
+/* 
+/* General Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body, html {
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  background-color: #f8f8f8;
+}
+
+/* Sidebar Styling */
+.sidebar {
+  width: 200px; /* Adjust as necessary */
+  background-color: #f8f9f9;
+  padding: 20px;
+  height: 100vh; /* Full height */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  overflow-x: hidden; /* Disable horizontal scroll */
+}
+
+.header .logo {
+  width: 55px; /* Adjust as necessary */
+  height: auto;
+}
+
+.header .site-title {
+  font-size: 24px; /* Adjust as necessary */
+  color: #194b2b;
+}
+
+.main-nav ul {
+  list-style-type: none;
+}
+
+.main-nav ul li a {
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+  color: #000;
+}
+
+/* Main Content Styling */
+.main-content {
+  margin-left: 200px; /* Same as sidebar width */
+  padding: 20px;
+  display: flex;
+}
+
+.left-content, .right-content {
+  flex: 1;
+}
+.inspection-section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Creates a 3-column grid */
+  gap: 20px; /* Adjusts the gap between grid items */
+  padding: 10px;
+}
+
+.inspection-header {
+  grid-column: 1 / -1; /* Header spans all 3 columns */
+  display: flex;
+  justify-content: space-between; /* Distributes header items evenly */
+  background-color: #eef1ef;
+  border-radius: 20px 20px 0 0;
+  padding: 10px;
+}
+
+.header-item {
+  flex-grow: 1;
+  text-align: center;
+}
+
+.inspection-item {
+  display: grid; /* Make the row a grid container */
+  grid-template-columns: repeat(3, 1fr); /* Retain your 3-column setup */
+  align-items: center; /* Vertically center content within cells */
+}
+
+.inspection-meta {
+  flex: 4; /* Adjusts flex basis to allocate more space */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 4px 17px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  border: 3px solid #cfd7d1;
+  height: 50px;
+}
+
+.photo-button-item, .download-button-item {
+  flex: 1; /* Adjusts flex basis to allocate less space */
+  display: flex;
+  align-items: stretch; /* Allows children to fill the container */
+  justify-content: stretch; /* Stretches children along the main axis */
+  padding: 4px 17px;
+  overflow: hidden; /* Ensures the image does not overflow its container */
+}
+
+.photo-button-item img, .download-button-item img {
+  width: 100%; /* Ensures the image covers the full width */
+  height: 100%; /* Ensures the image covers the full height */
+  object-fit: cover; /* Ensures the image covers the area without distortion */
+}
+
+.meta-column {
+  flex-grow: 1; /* Each column takes equal width */
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center items horizontally within the column */
+  padding: 10px; /* Add padding for spacing */
+}
+
+.gallery-column {
+  flex-grow: 1; /* Each column takes equal width */
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center items horizontally within the column */
+  padding: 10px; /* Add padding for spacing */
+}
+
+.download-column {
+  flex-grow: 1; /* Each column takes equal width */
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center items horizontally within the column */
+  padding: 10px; /* Add padding for spacing */
+}
+
+.inspection-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; /* Matches the desired width */
+  height: 40px; /* Matches the desired height */
+}
+
+.inspection-progress img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+
+/* If further alignment adjustments are needed, consider using 'margin' or 'transform: translate()' on specific elements. */
+
+
+/* Gallery Section */
+.gallery-section {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Responsive grid */
+  gap: 15px;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px; /* Optional for rounded corners */
+}
+
+/* Footer */
+.footer {
+  clear: both;
+  padding: 20px;
+  background-color: #f8f9f9;
+  text-align: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .sidebar {
+      width: 100%;
+      height: auto;
+      position: relative; /* Change sidebar to top on small screens */
+  }
+
+  .main-content {
+      margin-left: 0;
+  }
+
+  .left-content, .right-content {
+      flex: none;
+      width: 100%; /* Stack them on small screens */
+  }
+}
