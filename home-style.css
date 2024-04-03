@@ -72,8 +72,8 @@ html {
   margin-right: 20px;
   border: 2px solid transparent;
   overflow-y: auto; /* Allows scrolling within each section */
-  margin-bottom: 20px; /* Keeps existing margin, adjust as needed */
 }
+
 
 .row-container {
   grid-column: 1 / -1;
@@ -130,17 +130,17 @@ html {
 .photo-button-item img,
 .download-button-item img {
   object-fit: cover;
-  width: 5vw;
-  height: 5vw;
+  width: 3vw;
+  height: 3vw;
 }
 
 .inspection-progress {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 5vw;
-  height: 5vw;
-  padding: 5px;
+  width: 3vw;
+  height: 3vw;
+  padding: 3px;
 }
 
 .inspection-progress img {
@@ -345,8 +345,8 @@ h1, h2, h3, h4, h5, h6, .header {
   margin-bottom: 20px;
   margin-right: 20px;
   border: 2px solid transparent;
-  overflow-y: auto; /* Allows scrolling within each section */
   margin-bottom: 20px; /* Keeps existing margin, adjust as needed */
+  height: 50%;
 }
 
 .analytics-section:hover {
