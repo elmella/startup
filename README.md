@@ -14,4 +14,28 @@ Property managers do not like them either. Headache of planning and executing hu
 Checkt.ai is a novel ai-powered technology that allows residents to see their cleaning assingments and upload their own photos of the apartment. Ai image-recognition technology then automatically passes or fails the cleaning check. Checkt.ai is a reliable, easy, private, and consistent solution to this pain.
 
 ### Design
+![alt text](media/login.png)
+
+#### Login screen
+
 ![alt text](media/home.png)
+
+#### Main dashboard for Property Manager
+
+![alt text](media/add-photo.png)
+
+#### Resident application for uploading photos
+
+![alt text](media/messaging.png)
+
+#### Messages screen
+
+![alt text](media/tech-stack.png)
+
+#### The entire tech stack
+
+### Key Features
+• Secure login over HTTPS
+• View images on dashboard from S3
+• 
+
