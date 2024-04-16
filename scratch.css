@@ -1,0 +1,223 @@
+.frame {
+  display: flex;
+  flex-direction: column;
+  width: 234px;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 0px 0px 88px;
+  position: relative;
+  background-color: #f8f9f9;
+}
+.frame .div {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  flex: 0 0 auto;
+}
+.frame .logo {
+  position: relative;
+  width: 55px;
+  height: 55px;
+}
+.frame .checkt-ai-the-green {
+  position: relative;
+  width: fit-content;
+  margin-top: -1px;
+  font-family: "Inter-Medium", Helvetica;
+  font-weight: 500;
+  color: #194b2b;
+  font-size: 36px;
+  letter-spacing: -1.5px;
+  line-height: 42.8px;
+}
+.frame .text-wrapper {
+  letter-spacing: -0.54px;
+}
+.frame .span {
+  font-size: 24px;
+  letter-spacing: -0.36px;
+  line-height: 28.6px;
+}
+.frame .div-2 {
+  position: relative;
+  width: 52px;
+  height: 40px;
+}
+.frame .div-3 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  flex: 1;
+  align-self: stretch;
+  width: 100%;
+  flex-grow: 1;
+  background-color: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0px 2px 4px #00000040;
+}
+.frame .div-4 {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 4px 10px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+  background-color: #eef1ef;
+  border-radius: 20px 20px 0px 0px;
+  overflow: hidden;
+}
+.frame .div-5 {
+  position: relative;
+  width: 21px;
+  height: 12px;
+}
+.frame .text-wrapper-2 {
+  position: relative;
+  width: fit-content;
+  margin-top: -1px;
+  font-family: "Inter-Bold", Helvetica;
+  font-weight: 700;
+  color: #0a2915;
+  font-size: 24px;
+  letter-spacing: -1.5px;
+  line-height: 28.6px;
+  white-space: nowrap;
+}
+.frame .div-6 {
+  position: relative;
+  flex: 1;
+  flex-grow: 1;
+  height: 11px;
+}
+.frame .div-7 {
+  position: relative;
+  width: 6px;
+  height: 3px;
+}
+.frame .div-8 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 38px;
+  padding: 10px;
+  position: relative;
+  flex: 1;
+  align-self: stretch;
+  width: 100%;
+  flex-grow: 1;
+}
+.frame .div-9 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+}
+.frame .text-wrapper-3 {
+  position: relative;
+  width: fit-content;
+  margin-top: -1px;
+  font-family: "Inter-SemiBold", Helvetica;
+  font-weight: 600;
+  color: #0a2915;
+  font-size: 20px;
+  letter-spacing: -1.5px;
+  line-height: 23.8px;
+  white-space: nowrap;
+}
+.frame .div-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 0px 6px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+  border-radius: 3px;
+  border: 2px solid;
+  border-color: #cfd7d1;
+}
+.frame .text-wrapper-4 {
+  position: relative;
+  width: fit-content;
+  margin-top: -2px;
+  font-family: "Inter-Light", Helvetica;
+  font-weight: 300;
+  color: #a9afaa;
+  font-size: 20px;
+  letter-spacing: -1.5px;
+  line-height: 23.8px;
+  white-space: nowrap;
+}
+.frame .div-10 {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  position: relative;
+  flex: 0 0 auto;
+}
+.frame .div-11 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 38px;
+  position: relative;
+  flex: 0 0 auto;
+}
+.frame .div-12 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  position: relative;
+  flex: 0 0 auto;
+}
+.frame .text-wrapper-5 {
+  position: relative;
+  width: 65px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 16px;
+  letter-spacing: -1.5px;
+  line-height: 19px;
+}
+.frame .group {
+  position: relative;
+  width: 28px;
+  height: 28px;
+}
+.frame .rectangle {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  background-color: #88ecf3;
+  border-radius: 3px;
+}
+.frame .group-2 {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  background-color: #a9afaa;
+  border-radius: 14px;
+}
+.frame .rectangle-wrapper {
+  position: relative;
+  width: 25px;
+  height: 25px;
+}
+.frame .rectangle-2 {
+  width: 20px;
+  height: 20px;
+  background-color: #d9d9d9;
+  border-radius: 3px;
+}

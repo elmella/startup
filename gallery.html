@@ -24,7 +24,49 @@
           <li><a href="index.html">Log Out</a></li>
         </ul>
       </nav>
+      <section class="resident-info">
+        <header><h2>Filters</h2></header>
+        <ul>
+          <li>
+            <label for="residentName">Resident Name:</label>
+            <input type="text" id="residentName" name="residentName" placeholder="Jane Doe">
+          </li>
+          <li>
+            <label for="unitNumber">Unit Number:</label>
+            <input type="text" id="unitNumber" name="unitNumber" placeholder="315">
+          </li>
+          <li>
+            <label for="room">Room:</label>
+            <input type="text" id="room" name="room" placeholder="Kitchen">
+          </li>
+          <li>
+            <label for="item">Item:</label>
+            <input type="text" id="item" name="item" placeholder="Microwave">
+          </li>
+          <li>
+            <label for="inspectionDate">Date:</label>
+            <input type="date" id="inspectionDate" name="inspectionDate">
+          </li>
+          <li>
+            <label>State:</label>
+            <div>
+              <input type="checkbox" id="passed" name="state" value="passed">
+              <label for="passed">Passed</label>
+            </div>
+            <div>
+              <input type="checkbox" id="failed" name="state" value="failed">
+              <label for="failed">Failed</label>
+            </div>
+            <div>
+              <input type="checkbox" id="noPhoto" name="state" value="noPhoto">
+              <label for="noPhoto">No Photo</label>
+            </div>
+          </li>
+        </ul>
+      </section>
+      
     </div>
+
     <main class="main-content">
       <section class="gallery-section">
         <header class="gallery-header">
