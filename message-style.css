@@ -1,181 +1,172 @@
-/* Custom styles */
 * {
-    box-sizing: border-box;
-  }
-  
-  body, html {
-    height: 100%;
-    font-family: 'Inter', sans-serif;
-    background-color: #f8f8f8;
-  }
-  
-  /* Sidebar styles */
-  .sidebar {
-    width: 250px; /* Adjusted width */
-    background-color: #fff; /* Changed to white for a clean look */
-    padding: 1rem;
-    height: 100vh;
-    position: fixed;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Added shadow for depth */
-    overflow-x: hidden;
-    z-index: 1000; /* Ensure sidebar stacks on top */
-  }
-  
-  .header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 2rem; /* Increased space below header */
-  }
-  
-  .header .logo {
-    width: 60px; /* Increased size */
-    height: auto;
-    margin-right: 1rem; /* Added space between logo and title */
-  }
-  
-  .header .site-title {
-    font-size: 1.5rem; /* Increased size */
-    color: #194b2b;
-    font-weight: bold; /* Made the title bold */
-  }
-  
-  /* Navigation styles */
-  .main-nav ul {
-    list-style-type: none;
-  }
-  
-  .main-nav ul li a {
-    display: block;
-    padding: 0.5rem 1rem; /* Adjusted padding */
-    text-decoration: none;
-    color: #333;
-    border-radius: 0.5rem; /* Rounded corners for nav items */
-    transition: background-color 0.2s; /* Smooth transition for hover effect */
-  }
-  
-  .main-nav ul li a:hover {
-    background-color: #e8e8e8; /* Hover effect */
-  }
-  
-  .main-nav ul li a.active, .main-nav ul li a.home-tab {
-    font-weight: bold;
-    color: #4caf50; /* Changed to primary color for active state */
-    background-color: #f0f0f0; /* Light background for active state */
-    border-left: 4px solid #61ef94; /* Added left border for active state */
-    margin-left: -1rem; /* Adjust margin to align with the border */
-    padding-left: calc(1rem + 4px); /* Adjust padding to maintain alignment */
-  }
-  
-  /* Main content styles */
-  .main-content {
-    margin-left: 250px; /* Adjusted to match sidebar width */
-    padding: 1rem;
-    display: flex;
-    flex-wrap: wrap; /* Wrap content on smaller screens */
-  }
+  box-sizing: border-box;
+}
 
-  .left-content {
-    flex: 1; /* Take up remaining space */
-    margin-right: 1rem; /* Added space between columns */
-  }
+body, html {
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  background-color: #f8f8f8;
+}
 
-  .right-content {
-    flex: 2; /* Take up twice the space */
-  }
+.sidebar {
+  width: 250px;
+  background-color: #fff;
+  padding: 1rem;
+  height: 100vh;
+  position: fixed;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow-x: hidden;
+  z-index: 1000;
+}
 
-  .apt-image {
-    width: 15px;
-    height: 15px;
-  }
-  
-  /* Group section styles */
-  .group-section, .resident-section {
-    background-color: #fff;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    margin-bottom: 1rem;
-    padding: 1rem;
-  }
-  
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
 
-  
-  /* Adjusting list styles */
-  .list-group, .resident-list, .chat-messages {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 1rem;
-  }
-  
-  .list-item, .resident-item {
-    border-bottom: 1px solid #eaeaea;
-    padding: 0.5rem 0;
-    transition: background-color 0.2s;
-  }
-  
-  .list-item:hover, .resident-item:hover {
-    background-color: #f9f9f9; /* Hover effect for list items */
-  }
-  
-  /* Message bubble styles */
-  .message-sent, .message-received {
-    margin-bottom: 1rem;
-    padding: 0.75rem 1rem;
-    border-radius: 20px;
-    background: #f0f0f0;
-    max-width: 80%;
-    word-wrap: break-word;
-  }
-  
-  .message-sent {
-    background: #dcf8c6; /* Light green background for sent messages */
-    align-self: flex-end;
-    text-align: right;
-  }
-  
-  .message-received {
-    align-self: flex-start;
-    text-align: left;
-  }
-  
-  .message-status {
-    text-align: center;
-    width: 100%;
-    font-style: italic;
-    color: #999;
-  }
-  
-  /* Chat form styles */
-  .chat-form {
-    padding: 0.5rem;
-    position: sticky;
-    bottom: 0; /* Stick to bottom */
-    background: #fff;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .chat-form input[type="text"] {
-    width: 80%; /* Adjust as needed */
-    padding: 10px; /* Adjust as needed */
-    border: none;
-    border-radius: 5px; /* Adjust as needed */
-    margin: 10px 0; /* Adjust as needed */
-    font-size: 16px; /* Adjust as needed */
-    background-color: #f3f3f3; /* Adjust as needed */
-  }
-  
-  .chat-form button[type="submit"] {
-    width: 15%; /* Adjust as needed */
-    padding: 10px; /* Adjust as needed */
-    border: none;
-    border-radius: 5px; /* Adjust as needed */
-    margin: 10px 0; /* Adjust as needed */
-    font-size: 16px; /* Adjust as needed */
-    background-color: #4CAF50; /* Adjust as needed */
-    color: white; /* Adjust as needed */
-    cursor: pointer;
-  }
-  
-  .chat-form button[type="submit"]:hover {
-    background-color: #45a049; /* Adjust as needed */
-  }
-  
+.header .logo {
+  width: 60px;
+  height: auto;
+  margin-right: 1rem;
+}
+
+.header .site-title {
+  font-size: 1.5rem;
+  color: #194b2b;
+  font-weight: bold;
+}
+
+.main-nav ul {
+  list-style-type: none;
+}
+
+.main-nav ul li a {
+  display: block;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  color: #333;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.main-nav ul li a:hover {
+  background-color: #e8e8e8;
+}
+
+.main-nav ul li a.active, .main-nav ul li a.home-tab {
+  font-weight: bold;
+  color: #4caf50;
+  background-color: #f0f0f0;
+  border-left: 4px solid #61ef94;
+  margin-left: -1rem;
+  padding-left: calc(1rem + 4px);
+}
+
+.main-content {
+  margin-left: 250px;
+  padding: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.left-content {
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.right-content {
+  flex: 2;
+}
+
+.apt-image {
+  width: 15px;
+  height: 15px;
+}
+
+.group-section, .resident-section {
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+
+
+.list-group, .resident-list, .chat-messages {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+.list-item, .resident-item {
+  border-bottom: 1px solid #eaeaea;
+  padding: 0.5rem 0;
+  transition: background-color 0.2s;
+}
+
+.list-item:hover, .resident-item:hover {
+  background-color: #f9f9f9;
+}
+
+.message-sent, .message-received {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 20px;
+  background: #f0f0f0;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.message-sent {
+  background: #dcf8c6;
+  align-self: flex-end;
+  text-align: right;
+}
+
+.message-received {
+  align-self: flex-start;
+  text-align: left;
+}
+
+.message-status {
+  text-align: center;
+  width: 100%;
+  font-style: italic;
+  color: #999;
+}
+
+.chat-form {
+  padding: 0.5rem;
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.chat-form input[type="text"] {
+  width: 80%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin: 10px 0;
+  font-size: 16px;
+  background-color: #f3f3f3;
+}
+
+.chat-form button[type="submit"] {
+  width: 15%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin: 10px 0;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+.chat-form button[type="submit"]:hover {
+  background-color: #45a049;
+}
