@@ -1,306 +1,159 @@
+/* Custom styles */
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
   }
   
-  body,
-  html {
+  body, html {
     height: 100%;
-    font-family: "Inter", sans-serif;
+    font-family: 'Inter', sans-serif;
     background-color: #f8f8f8;
   }
   
+  /* Sidebar styles */
   .sidebar {
-    width: 200px;
-    background-color: #f8f9f9;
-    padding: 20px;
+    width: 250px; /* Adjusted width */
+    background-color: #fff; /* Changed to white for a clean look */
+    padding: 1rem;
     height: 100vh;
     position: fixed;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Added shadow for depth */
     overflow-x: hidden;
+    z-index: 1000; /* Ensure sidebar stacks on top */
   }
   
   .header {
     display: flex;
     align-items: center;
-    margin-top: 80px;
-    margin-bottom: 50px;
+    margin-bottom: 2rem; /* Increased space below header */
   }
   
   .header .logo {
-    width: 45px;
+    width: 60px; /* Increased size */
     height: auto;
+    margin-right: 1rem; /* Added space between logo and title */
   }
   
   .header .site-title {
-    font-size: 30px;
+    font-size: 1.5rem; /* Increased size */
     color: #194b2b;
+    font-weight: bold; /* Made the title bold */
   }
   
+  /* Navigation styles */
   .main-nav ul {
     list-style-type: none;
   }
   
   .main-nav ul li a {
     display: block;
-    padding: 10px;
+    padding: 0.5rem 1rem; /* Adjusted padding */
     text-decoration: none;
-    color: #000;
+    color: #333;
+    border-radius: 0.5rem; /* Rounded corners for nav items */
+    transition: background-color 0.2s; /* Smooth transition for hover effect */
   }
   
-  .main-nav ul li a.home-tab {
+  .main-nav ul li a:hover {
+    background-color: #e8e8e8; /* Hover effect */
+  }
+  
+  .main-nav ul li a.active, .main-nav ul li a.home-tab {
     font-weight: bold;
-    border-bottom: 2px solid #61ef94;
+    color: #4caf50; /* Changed to primary color for active state */
+    background-color: #f0f0f0; /* Light background for active state */
+    border-left: 4px solid #61ef94; /* Added left border for active state */
+    margin-left: -1rem; /* Adjust margin to align with the border */
+    padding-left: calc(1rem + 4px); /* Adjust padding to maintain alignment */
   }
   
+  /* Main content styles */
   .main-content {
-    margin-left: 200px;
-    padding: 20px;
+    margin-left: 250px; /* Adjusted to match sidebar width */
+    padding: 1rem;
     display: flex;
-    height: calc(100vh - 40px);
-    overflow: hidden;
-  }
-  
-  .left-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  .right-content {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .left-content,
-  .right-content {
-    overflow-y: auto;
+    flex-wrap: wrap; /* Wrap content on smaller screens */
   }
 
-  .group-section {
-    border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden; /* Keeps everything within the rounded border */
-    background: #fff;
+  .left-content {
+    flex: 1; /* Take up remaining space */
+    margin-right: 1rem; /* Added space between columns */
+  }
+
+  .right-content {
+    flex: 2; /* Take up twice the space */
+  }
+
+  .apt-image {
+    width: 15px;
+    height: 15px;
+  }
+  
+  /* Group section styles */
+  .group-section, .resident-section {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
     padding: 1rem;
   }
   
-  .group-header {
-    text-align: center;
+  /* Text shadow for headers */
+  .group-header h2, .resident-header h2, .chat-header h2 {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Adjusting list styles */
+  .list-group, .resident-list, .chat-messages {
+    list-style: none;
+    padding: 0;
     margin-bottom: 1rem;
   }
   
-  .list-group {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .list-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #eaeaea; /* light line for separation */
-  }
-  
-  .list-item:last-child {
-    border-bottom: none;
-  }
-  
-  .apt-image {
-    border-radius: 50%;
-    margin-right: 0.5rem;
-    width: 40px; /* adjust the size as needed */
-    height: 40px;
-    }
-  
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  .header {
-    font-family: Arial, sans-serif;
-    font-weight: normal;
-    font-size: 16px;
-  }
-  .resident-section {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    padding: 16px;
-    box-sizing: border-box;
-  }
-  
-  .resident-header h2 {
-    margin: 0;
-    padding-bottom: 16px;
-    font-size: 22px;
-    color: #333;
-    border-bottom: 2px solid #eaeaea;
-  }
-  
-  .resident-list {
-    list-style: none;
-    padding: 0;
-    margin: 16px 0 0 0;
-  }
-  
-  .resident-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-    padding-bottom: 16px;
+  .list-item, .resident-item {
     border-bottom: 1px solid #eaeaea;
+    padding: 0.5rem 0;
+    transition: background-color 0.2s;
   }
   
-  .resident-name {
-    font-weight: bold;
-    font-size: 18px;
-    color: #333;
+  .list-item:hover, .resident-item:hover {
+    background-color: #f9f9f9; /* Hover effect for list items */
   }
   
-  .resident-location {
-    color: #666;
-    font-size: 16px;
-  }
-  
-  .status-icon {
-    color: #4caf50; /* or the color of your choice */
-    margin-right: 8px;
-  }
-  
-  .notification-badge {
-    display: inline-block;
-    background-color: #f44336; /* Adjust to match notification color */
-    color: #fff;
-    border-radius: 50%;
-    padding: 4px 8px;
-    font-size: 14px;
-    vertical-align: middle;
-  }
-  
-  .timestamp {
-    font-size: 14px;
-    color: #999;
-  }
-  
-  .chat-menu {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    margin: auto;
-    background: #FFFFFF;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    border-radius: 20px;
-    overflow: hidden;
-    font-family: 'Arial', sans-serif; /* Use the font that matches your design */
-  }
-  
-  .chat-header {
-    background: #F7F7F7; /* Light grey background */
-    padding: 16px;
-    border-bottom: 1px solid #EAEAEA;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .chat-header h2 {
-    margin: 0;
-    color: #333333;
-    font-size: 1.5rem;
-  }
-  
-  .last-active {
-    font-size: 0.875rem;
-    color: #888888;
-  }
-  
-  .chat-messages {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 10px;
-  }
-  
+  /* Message bubble styles */
   .message-sent, .message-received {
-    margin-bottom: 12px;
-    padding: 10px;
-    border-radius: 18px;
-    max-width: 70%;
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 20px;
+    background: #f0f0f0;
+    max-width: 80%;
+    word-wrap: break-word;
   }
   
   .message-sent {
+    background: #dcf8c6; /* Light green background for sent messages */
     align-self: flex-end;
-    background: #F0F0F0;
+    text-align: right;
   }
   
   .message-received {
     align-self: flex-start;
-    background: #D6F5D6; /* Light green background */
+    text-align: left;
   }
   
   .message-status {
-    display: flex;
-    align-items: center;
-    font-size: 0.875rem;
-    color: #888888;
+    text-align: center;
+    width: 100%;
+    font-style: italic;
+    color: #999;
   }
   
-  .chat-actions {
-    display: none; /* Assuming chat actions are not present in the image provided */
-  }
-  
+  /* Chat form styles */
   .chat-form {
-    display: flex;
-    padding: 12px;
-    background: #F7F7F7;
-    align-items: center;
+    padding: 0.5rem;
+    position: sticky;
+    bottom: 0; /* Stick to bottom */
+    background: #fff;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   }
-  
-  .chat-form input {
-    flex-grow: 1;
-    border: none;
-    padding: 8px;
-    border-radius: 18px;
-    margin-right: 8px;
-  }
-  
-  .chat-form button {
-    display: none; /* Assuming the send button is not present in the image provided */
-  }
-  
-  /* You can add media queries here for responsiveness */
-  @media (max-width: 768px) {
-    .chat-menu {
-      width: 90%;
-    }
-  }
-  
-  
-  
-  
-  @media (max-width: 768px) {
-    .sidebar {
-      width: 100%;
-      height: auto;
-      position: relative;
-    }
-  
-    .main-content {
-      margin-left: 0;
-    }
-  
-    .left-content,
-    .right-content {
-      flex: none;
-      width: 100%;
-    }
-  }
-  
   
   
