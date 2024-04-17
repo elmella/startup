@@ -1,4 +1,4 @@
-fetch("http://localhost:3000/home")
+fetch("http://localhost:3000/api/inspections")
   .then((response) => response.json())
   .then((data) => {
     // Store the data in LocalStorage
@@ -161,7 +161,7 @@ function updateGallery(data) {
 
             if (aspect.status === 1) {
               totalPassed++;
-            } else if (aspect.status === 0) {
+            } else if (aspect.status === 2) {
               totalFailed++;
             } else {
               totalRemaining++;
@@ -185,93 +185,93 @@ function updateGallery(data) {
         <img src="assets/download.svg" alt="Download CSV" />
       </div>
     `;
-    inspectionContainer.appendChild(div);
+      inspectionContainer.appendChild(div);
+    });
   });
-});
 }
 
 function showPhotos(date) {
-    console.log("Showing photos for inspection on", date);
-    const data = JSON.parse(localStorage.getItem("myData"));
-    const photos = [];
+  console.log("Showing photos for inspection on", date);
+  const data = JSON.parse(localStorage.getItem("myData"));
+  const photos = [];
 
-  
-    data.forEach((entry) => {
-      if (entry.due_date === date) {
-        entry.units.forEach((unit) => {
-          unit.rooms.forEach((room) => {
-            room.items.forEach((item) => {
-              item.aspects.forEach((aspect) => {
-                if (aspect.image_url) {
-                  photos.push(aspect.image_url);
-                }
-              });
+  data.forEach((entry) => {
+    if (entry.due_date === date) {
+      entry.units.forEach((unit) => {
+        unit.rooms.forEach((room) => {
+          room.items.forEach((item) => {
+            item.aspects.forEach((aspect) => {
+              if (aspect.image_url) {
+                photos.push(aspect.image_url);
+              }
             });
           });
         });
-      }
-    });
-  
-    const photoContainer = document.getElementById('photoContainer');
-    const backButton = document.getElementById('backButton');
-  
-    photoContainer.style.display = 'block'; // Make the container visible
-    backButton.style.display = 'block'; // Make the back button visible
-    // Clear the existing images
-    photoContainer.innerHTML = '';
-    photoContainer.appendChild(backButton); // Append the back button to the container
-    if (photos.length === 0) {
-      photoContainer.textContent = "No photos found for this inspection";
-    } else {
-      photos.forEach((url) => {
-        const img = document.createElement('img');
-        img.src = url;
-        img.style.marginRight = '10px'; // Add some space between the images
-        photoContainer.appendChild(img);
       });
     }
+  });
+
+  const photoContainer = document.getElementById("photoContainer");
+  const backButton = document.getElementById("backButton");
+
+  photoContainer.style.display = "block"; // Make the container visible
+  backButton.style.display = "block"; // Make the back button visible
+  // Clear the existing images
+  photoContainer.innerHTML = "";
+  photoContainer.appendChild(backButton); // Append the back button to the container
+  if (photos.length === 0) {
+    photoContainer.textContent = "No photos found for this inspection";
+  } else {
+    photos.forEach((url) => {
+      const img = document.createElement("img");
+      img.src = url;
+      img.style.marginRight = "10px"; // Add some space between the images
+      photoContainer.appendChild(img);
+    });
   }
-
-
+}
 
 function downloadCSV(date) {
-    const data = JSON.parse(localStorage.getItem("myData"));
-    const csvRows = [];
-    const headers = ["Date", "Unit", "Room", "Item", "Aspect", "Status"];
-    csvRows.push(headers.join(","));
+  const data = JSON.parse(localStorage.getItem("myData"));
+  const csvRows = [];
+  const headers = ["Date", "Unit", "Room", "Item", "Aspect", "Status"];
+  csvRows.push(headers.join(","));
 
-    data.forEach((entry) => {
-        if (entry.due_date === date) {
-        entry.units.forEach((unit) => {
-            unit.rooms.forEach((room) => {
-            room.items.forEach((item) => {
-                item.aspects.forEach((aspect) => {
-                csvRows.push([
-                    entry.due_date,
-                    unit.unit_number,
-                    room.room_name,
-                    item.item_name,
-                    aspect.aspect_name,
-                    aspect.status === 1 ? "Passed" : aspect.status === 0 ? "Failed" : "Not Done",
-                ].join(","));
-                });
+  data.forEach((entry) => {
+    if (entry.due_date === date) {
+      entry.units.forEach((unit) => {
+        unit.rooms.forEach((room) => {
+          room.items.forEach((item) => {
+            item.aspects.forEach((aspect) => {
+              csvRows.push(
+                [
+                  entry.due_date,
+                  unit.unit_number,
+                  room.room_name,
+                  item.item_name,
+                  aspect.aspect_name,
+                  aspect.status === 1
+                    ? "Passed"
+                    : aspect.status === 0
+                    ? "Failed"
+                    : "Not Done",
+                ].join(",")
+              );
             });
-            });
+          });
         });
-        }
-    });
-
-    const csvData = csvRows.join("\n");
-    const blob = new Blob([csvData], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.setAttribute("href", url);
-    a.setAttribute("download", `inspection_${date}.csv`);
-    a.click();
+      });
     }
+  });
 
-
-    
+  const csvData = csvRows.join("\n");
+  const blob = new Blob([csvData], { type: "text/csv" });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.setAttribute("href", url);
+  a.setAttribute("download", `inspection_${date}.csv`);
+  a.click();
+}
 
 function updateAnalytics(data) {
   let totalAspects = 0,
@@ -292,7 +292,7 @@ function updateAnalytics(data) {
           item.aspects.forEach((aspect) => {
             totalAspects++;
             if (aspect.status === 1) passed++;
-            if (aspect.status === 0) failed++;
+            if (aspect.status === 2) failed++;
           });
         });
       });
@@ -345,15 +345,18 @@ function updateAnalytics(data) {
   }
 }
 
-document.getElementById('backButton').addEventListener('click', () => {
-    const photoContainer = document.getElementById('photoContainer');
-    const backButton = document.getElementById('backButton');
+document.getElementById("backButton").addEventListener("click", () => {
+  const photoContainer = document.getElementById("photoContainer");
+  const backButton = document.getElementById("backButton");
 
-    photoContainer.style.display = 'none'; // Hide the container
-    backButton.style.display = 'none'; // Hide the back button
+  photoContainer.style.display = "none"; // Hide the container
+  backButton.style.display = "none"; // Hide the back button
 
-    // remove the images from the container
-    while (photoContainer.firstChild && photoContainer.firstChild !== backButton) {
-        photoContainer.firstChild.remove();
-    }
+  // remove the images from the container
+  while (
+    photoContainer.firstChild &&
+    photoContainer.firstChild !== backButton
+  ) {
+    photoContainer.firstChild.remove();
+  }
 });

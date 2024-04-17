@@ -6,6 +6,9 @@ const bcrypt = require('bcrypt');
 const DB = require('./database.js');
 const app = express();
 
+// DB.createSampleData();
+
+
 // Port number can be set in the environment or default to 3000
 const PORT = process.env.PORT || 3000;
 
@@ -93,41 +96,28 @@ apiRouter.post('/inspections', async (req, res) => {
     }
 });
 
-// apiRouter.get('/inspections', async (req, res) => {
-//     try {
-//         const inspections = await DB.fetchInspections();
-//         res.json(inspections);
-//     } catch (error) {
-//         console.error('Failed to fetch inspections:', error);
-//         res.status(500).json({ error: 'Failed to fetch inspections' });
-//     }
-// });
-// Pass in `res` when calling `fetchInspections`
+app.post('/api/overrideAspectStatus', async (req, res) => {
+  console.log('Overriding aspect status');
+  const { dueDate, unitId, roomName, itemName, aspectName, newStatus } = req.body;
+
+  try {
+    await DB.overrideAspectStatus(dueDate, unitId, roomName, itemName, aspectName, newStatus);
+    console.log('Aspect status overridden successfully');
+    res.status(200).send('Aspect status overridden successfully');
+  } catch (error) {
+    console.error('Error overriding aspect status:', error);
+    res.status(500).send('Error overriding aspect status');
+  }
+});
+
 app.get('/api/inspections', DB.fetchInspections);
 
-// apiRouter.get('/units', async (req, res) => {
-//     try {
-//         const units = await DB.fetchUnits();
-//         res.json(units);
-//     } catch (error) {
-//         console.error('Failed to fetch units:', error);
-//         res.status(500).json({ error: 'Failed to fetch units' });
-//     }
-// });
 
 app.get('/api/units', DB.fetchUnits);
 
-// apiRouter.get('/residents', async (req, res) => {
-//     try {
-//         const residents = await DB.fetchResidents();
-//         res.json(residents);
-//     } catch (error) {
-//         console.error('Failed to fetch residents:', error);
-//         res.status(500).json({ error: 'Failed to fetch residents' });
-//     }
-// });
 
 app.get('/api/residents', DB.fetchResidents);
+
 
 
     // Get the home data
@@ -296,27 +286,31 @@ function getMessageData(req, res, next) {
 const testDataResident = {
   resident_name: "John Doe",
   resident_id: "123456",
-  resident_email: "johndoe@gmail.com"
+  resident_email: "johndoe@gmail.com",
+  unit_id: "12345"
 };
 
 const testDataResident2 = {
   resident_name: "Jane Doe",
   resident_id: "654321",
-  resident_email: "janedoe@example.com"
+  resident_email: "janedoe@example.com",
+  unit_id: "12345"
 };
 
 const testDataResident3 = {
           resident_name: "Juan Doe",
           resident_id: "111111",
-          resident_email: "juandoe@example.com"
-
+          resident_email: "juandoe@example.com",
+          unit_id: "54321"
 };
 
 const testDataResident4 = {
           resident_name: "Juana Doe",
           resident_id: "222222",
-          resident_email: "juanadoe@example.com"
+          resident_email: "juanadoe@example.com",
+          unit_id: "54321"
 };
+
 
 // // Function call to add the test data
 // (async () => {
@@ -329,10 +323,10 @@ const testDataResident4 = {
 
 // (async () => {
 //   try {
-//     await addResident(testDataResident);
-//     await addResident(testDataResident2);
-//     await addResident(testDataResident3);
-//     await addResident(testDataResident4);
+//     await DB.addResident(testDataResident);
+//     await DB.addResident(testDataResident2);
+//     await DB.addResident(testDataResident3);
+//     await DB.addResident(testDataResident4);
 //   } catch (error) {
 //     console.error('Error:', error);
 //   }
