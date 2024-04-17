@@ -4,56 +4,61 @@ fetch('data.json')
     updateGallery(data);
     updateAnalytics(data);
   });
-  
+
 function updateGallery(data) {
-    const galleryContainer = document.querySelector('.gallery-grid');
-    const inspectionContainer = document.querySelector('.inspection-section');
-    galleryContainer.innerHTML = ''; // Clear existing content
-  
-    // Check if data is an array and has content
-    if (!data || !Array.isArray(data)) {
-      console.error('Data is undefined or not an array');
+  const galleryContainer = document.querySelector('.gallery-grid');
+  const residentName = document.getElementById('residentName').value.toLowerCase();
+  const unitNumber = document.getElementById('unitNumber').value;
+  const roomName = document.getElementById('room').value.toLowerCase();
+  const itemName = document.getElementById('item').value.toLowerCase();
+  const inspectionDate = document.getElementById('inspectionDate').value;
+  const statePassed = document.getElementById('passed').checked;
+  const stateFailed = document.getElementById('failed').checked;
+  const stateNoPhoto = document.getElementById('noPhoto').checked;
+
+  galleryContainer.innerHTML = ''; // Clear existing content
+
+  data.forEach(entry => {
+    if (inspectionDate && entry.due_date !== inspectionDate) {
       return;
     }
-  
-    // Iterate over each entry in the data array
-    data.forEach(entry => {
-      // Ensure units exist and are an array
-      if (!entry.units || !Array.isArray(entry.units)) {
-        console.error('Units are undefined or not an array in', entry);
+
+    entry.units.forEach(unit => {
+      if (unitNumber && unit.unit_number !== unitNumber) {
         return;
       }
-  
-      // Iterate over each unit
-      entry.units.forEach(unit => {
-        // Ensure rooms exist and are an array
-        if (!unit.rooms || !Array.isArray(unit.rooms)) {
-          console.error('Rooms are undefined or not an array in', unit);
+
+      const hasMatchingResident = unit.residents.some(resident => 
+        resident.resident_name.toLowerCase().includes(residentName)
+      );
+
+      if (residentName && !hasMatchingResident) {
+        return;
+      }
+
+      unit.rooms.forEach(room => {
+        if (roomName && room.room_name.toLowerCase() !== roomName) {
           return;
         }
-  
-        let totalPassed = 0, totalFailed = 0, totalRemaining = 0;
 
-        // Iterate over each room
-        unit.rooms.forEach(room => {
-          // Ensure items exist and are an array
-          if (!room.items || !Array.isArray(room.items)) {
-            console.error('Items are undefined or not an array in', room);
+        room.items.forEach(item => {
+          if (itemName && item.item_name.toLowerCase() !== itemName) {
             return;
           }
-  
-          // Iterate over each item
-          room.items.forEach(item => {
-            // Ensure aspects exist and are an array
-            if (!item.aspects || !Array.isArray(item.aspects)) {
-              console.error('Aspects are undefined or not an array in', item);
-              return;
+
+          item.aspects.forEach(aspect => {
+            let matchState = true;
+            if (statePassed && aspect.status !== 1) {
+              matchState = false;
+            }
+            if (stateFailed && aspect.status !== 0) {
+              matchState = false;
+            }
+            if (stateNoPhoto && aspect.image_url) {
+              matchState = false;
             }
 
-            
-  
-            // Iterate over each aspect
-            item.aspects.forEach(aspect => {
+            if (matchState) {
               const figure = document.createElement('figure');
               figure.className = 'gallery-item';
               figure.innerHTML = `
@@ -67,36 +72,25 @@ function updateGallery(data) {
                 </figcaption>
               `;
               galleryContainer.appendChild(figure);
-
-              if (aspect.status === 1) {
-                totalPassed++;
-              } else if (aspect.status === 0) {
-                totalFailed++;
-              } else {
-                totalRemaining++;
-              }
-
-            });
-            });
+            }
+          });
         });
+      });
+    });
+  });
+}
 
-
-        const svg = generateDynamicSVG(totalPassed, totalFailed, totalRemaining);
-        const div = document.createElement('div');
-        div.className = 'row-container';
-        div.innerHTML = `
-        <div class="inspection-meta">
-          <div class="inspection-date">${entry.due_date}</div>
-          <div class="inspection-progress">${svg}</div></div>
-          <div class="photo-button-item">
-            <img src="assets/photo-button.svg" alt="Photo" />
-          </div>
-          <div class="download-button-item">
-            <img src="assets/download-disabled.svg" alt="Download Disabled" />
-          </div>
-        `;
-        inspectionContainer.appendChild(div);
-        });
-    }
-    );
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    const filterInputs = document.querySelectorAll('.sidebar input, .sidebar select');
+    filterInputs.forEach(input => {
+      input.addEventListener('change', () => {
+        fetch('data.json')
+          .then(response => response.json())
+          .then(data => {
+            updateGallery(data);
+            updateAnalytics(data);
+          });
+      });
+    });
+  });
+  

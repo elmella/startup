@@ -3,7 +3,7 @@
         "due_date": "2023-12-01",
         "units": [
             {
-                "unit_name": "Unit 1",
+                "unit_number": "1",
                 "rooms": [
                     {
                         "room_name": "Kitchen",
@@ -360,10 +360,22 @@
                             }
                         ]
                     }
+                ],
+                "residents": [
+                    {
+                        "resident_name": "John Doe",
+                        "resident_id": "123456",
+                        "resident_email": "johndoe@gmail.com"
+                    },
+                    {
+                        "resident_name": "Jane Doe",
+                        "resident_id": "654321",
+                        "resident_email": "janedoe@gmail.com"
+                    }
                 ]
             },
             {
-                "unit_name": "Unit 1",
+                "unit_number": "2",
                 "rooms": [
                     {
                         "room_name": "Kitchen",
@@ -684,6 +696,18 @@
                                 ]
                             }
                         ]
+                    }
+                ],
+                "residents": [
+                    {
+                        "resident_name": "John Doe",
+                        "resident_id": "123456",
+                        "resident_email": "johndoe@gmail.com"
+                    },
+                    {
+                        "resident_name": "Jane Doe",
+                        "resident_id": "654321",
+                        "resident_email": "janedoe@gmail.com"
                     }
                 ]
             }
@@ -693,7 +717,7 @@
         "due_date": "2023-11-01",
         "units": [
             {
-                "unit_name": "Unit 1",
+                "unit_number": "1",
                 "rooms": [
                     {
                         "room_name": "Kitchen",
@@ -1050,10 +1074,22 @@
                             }
                         ]
                     }
+                ],
+                "residents": [
+                    {
+                        "resident_name": "John Doe",
+                        "resident_id": "123456",
+                        "resident_email": "johndoe@gmail.com"
+                    },
+                    {
+                        "resident_name": "Jane Doe",
+                        "resident_id": "654321",
+                        "resident_email": "janedoe@gmail.com"
+                    }
                 ]
             },
             {
-                "unit_name": "Unit 1",
+                "unit_number": "2",
                 "rooms": [
                     {
                         "room_name": "Kitchen",
@@ -1374,6 +1410,18 @@
                                 ]
                             }
                         ]
+                    }
+                ],
+                "residents": [
+                    {
+                        "resident_name": "John Doe",
+                        "resident_id": "123456",
+                        "resident_email": "johndoe@gmail.com"
+                    },
+                    {
+                        "resident_name": "Jane Doe",
+                        "resident_id": "654321",
+                        "resident_email": "janedoe@gmail.com"
                     }
                 ]
             }
