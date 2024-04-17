@@ -1,4 +1,21 @@
+# Dependency directories
 node_modules/
-.DS_Store
 
-/node_modules/
+
+dbConfig.json
+# ./dbConfig.json
+
+
+# Environment variables
+.env
+
+# misc
+.DS_Store
+Thumbs.db
+*.swp
+*.lock
+*.bak
+*.tmp
+*.temp
+
+
