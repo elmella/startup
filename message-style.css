@@ -67,7 +67,9 @@ body, html {
   margin-left: 250px;
   padding: 1rem;
   display: flex;
-  flex-wrap: wrap;
+  flex: 1;
+  height: 85vh;
+
 }
 
 .left-content {
@@ -169,4 +171,51 @@ body, html {
 
 .chat-form button[type="submit"]:hover {
   background-color: #45a049;
+}
+
+.left-content {
+  margin-right: 1rem;
+}
+
+.right-content {
+  flex: 2;
+  overflow: auto; /* Add this line */
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  background-color: #194b2b;
+  color: #ffffff;
+  width: 100%;
+  margin-left: 100px;
+}
+
+.footer-content {
+  text-align: center;
+}
+
+.footer-text {
+  font-size: 0.875rem;
+  align-self: center;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.footer-link {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.3s ease;
+  margin-bottom: 30px;
+}
+
+.footer-link:hover {
+  color: #61ef94;
 }
