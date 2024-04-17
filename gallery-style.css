@@ -222,10 +222,3 @@ body, html {
 .gallery-item:hover figcaption {
   opacity: 1;
 }
-
-.footer {
-  clear: both;
-  padding: 20px;
-  background-color: #f8f9f9;
-  text-align: center;
-}

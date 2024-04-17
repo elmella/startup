@@ -1,37 +1,30 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="globals.css" />
-    <link rel="stylesheet" href="styleguide.css" />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="login">
-      <div class="logo-w-background">
-        <div class="logo-wrapper"><img class="logo" src="assets/logo.svg" /></div>
-        <div class="text-wrapper">checkt.ai</div>
-
-      </div>
-      <div class="frame">
-        <div class="div">Login to your account:</div>
-        <div class="frame-wrapper">
-          <div class="frame-2">
-            <div class="frame-3">
-              <div class="div-wrapper"><div class="text-wrapper-2">Email</div></div>
-              <div class="frame-4"><div class="text-wrapper-3">Example@residential.com</div></div>
-            </div>
-            <div class="frame-3">
-              <div class="div-wrapper"><div class="text-wrapper-2">Password</div></div>
-              <div class="frame-5"><div class="text-wrapper-3">YourPassword16!8</div></div>
-            </div>
-            <div class="frame-6">
-              <div class="frame-7"><a href="home.html" class="text-wrapper-4">Login</a></div>
-            </div>
-          </div>
-        </div>
-        <a href="create-account.html" class="text-wrapper-5">Create an account</a>
-      </div>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="login-container">
+    <div class="branding">
+      <img class="logo" src="assets/logo.svg" alt="Checkt.ai Logo" />
+      <h1 class="branding-title">checkt.ai</h1>
     </div>
-  </body>
+    <div class="login-box">
+      <h2 class="login-title">Login to your account:</h2>
+      <form class="login-form" action="home.html">
+        <div class="form-group">
+          <label for="emailInput" class="form-label">Email</label>
+          <input type="email" id="emailInput" class="form-input" placeholder="Example@residential.com">
+        </div>
+        <div class="form-group">
+          <label for="passwordInput" class="form-label">Password</label>
+          <input type="password" id="passwordInput" class="form-input" placeholder="YourPassword16!8">
+        </div>
+        <button type="submit" class="login-button">Login</button>
+      </form>
+      <a href="create-account.html" class="create-account-link">Create an account</a>
+    </div>
+  </div>
+</body>
 </html>
