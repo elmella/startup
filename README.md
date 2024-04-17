@@ -35,7 +35,49 @@ Checkt.ai is a novel ai-powered technology that allows residents to see their cl
 #### The entire tech stack
 
 ### Key Features
-• Secure login over HTTPS
-• View images on dashboard from S3
-• 
+• Secure login/create account over HTTPS
 
+• Create new cleaning check assingments
+
+• Edit the residents and units
+
+• View and filter images on dashboard stored in S3 Bucket
+
+• Download information about the cleaning check as a csv file
+
+• Message residents and pass-off cleaning checks
+
+• View analytics on the progress and results of a cleaning check
+
+### Technologies
+I use the technologies in the following ways:
+
+• HTML - HTML pages for login, main dashboard, messaging page
+
+• CSS - Application styling for different size screens, color and format components, create scrollable elements and add shadows and items only visible on hover
+
+• JavaScript - Used to expand gallery, filter images, download inspection information, detailed analytics, backend calls and fetches
+
+• Service - Backend service for:
+
+  - Login
+  
+  - Create account
+  
+  - Add/remove unit
+  
+  - Add inspection
+
+  - Add/remove resident
+  
+  - Override inspection result
+  
+  - Analyze photo (Google's API)
+  
+  - Get photos and inspection data
+
+• DB/Login - Authorize user, store photos in S3 and photo urls in DB, units and residents, inspection result, need authorization to upload photos, store messages
+
+• WebSocket - Message residents
+
+• React - Port the entire project to React
