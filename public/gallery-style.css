@@ -225,6 +225,14 @@ body, html {
 }
 
 
+.override-button {
+  position: absolute;
+  bottom: -40px; /* adjust as needed */
+  right: 25px; /* adjust as needed */
+  z-index: 10; /* ensures it is above other content */
+}
+
+
 .footer {
   display: flex;
   justify-content: center;

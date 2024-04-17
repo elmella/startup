@@ -221,6 +221,7 @@ function showPhotos(date) {
   photoContainer.appendChild(backButton); // Append the back button to the container
   if (photos.length === 0) {
     photoContainer.textContent = "No photos found for this inspection";
+    photoContainer.appendChild(backButton)
   } else {
     photos.forEach((url) => {
       const img = document.createElement("img");
@@ -344,6 +345,33 @@ function updateAnalytics(data) {
     console.error("Not Done bar not found");
   }
 }
+
+function overrideStatus(event, dueDate, unitId, roomName, itemName, aspectName, newStatus) {
+  console.log('Overriding status:', dueDate, unitId, roomName, itemName, aspectName, newStatus);
+  event.preventDefault(); // to stop the form from submitting and reloading the page
+  fetch('http://localhost:3000/api/overrideAspectStatus', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ dueDate, unitId, roomName, itemName, aspectName, newStatus })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Override successful:', data);
+    alert('Status overridden successfully');
+  })
+  .catch(error => {
+    console.error('Error overriding status:', error);
+    alert('Failed to override status: ' + error.message);
+  });
+}
+
 
 document.getElementById("backButton").addEventListener("click", () => {
   const photoContainer = document.getElementById("photoContainer");
