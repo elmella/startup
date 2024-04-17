@@ -14,25 +14,26 @@ Property managers do not like them either. Headache of planning and executing hu
 Checkt.ai is a novel ai-powered technology that allows residents to see their cleaning assingments and upload their own photos of the apartment. Ai image-recognition technology then automatically passes or fails the cleaning check. Checkt.ai is a reliable, easy, private, and consistent solution to this pain.
 
 ### Design
-![alt text](media/login.png)
+<img src="media/login.png" alt="Login screen" width="450">
 
 #### Login screen
 
-![alt text](media/home.png)
+<img src="media/home.png" alt="Main dashboard for Property Manager" width="450">
 
 #### Main dashboard for Property Manager
 
-![alt text](media/add-photo.png)
+<img src="media/add-photo.png" alt="Resident application for uploading photos" width="450">
 
 #### Resident application for uploading photos
 
-![alt text](media/messaging.png)
+<img src="media/messaging.png" alt="Messages screen" width="450">
 
 #### Messages screen
 
-![alt text](media/tech-stack.png)
+<img src="media/tech-stack.png" alt="The entire tech stack" width="450">
 
 #### The entire tech stack
+
 
 ### Key Features
 • Secure login/create account over HTTPS
@@ -81,3 +82,38 @@ I use the technologies in the following ways:
 • WebSocket - Message residents
 
 • React - Port the entire project to React
+
+
+## HTML Deliverable
+For this deliverable, I have:
+
+• HTML page for login as index.html, the main dashboard, the gallery view with the filter, and the message page
+
+• Navigation bar on each page for navigating between pages
+
+• Use of many different html tags
+
+• Sample text for inspection data, for the gallery, the filter, and messages
+
+• Images for the logo, download, view image, and other action buttons as svg files
+
+• Input boxes for the login, download csv button, boxes where the database will feed s3 image urls
+
+• HTML for the message page where a websocket will be used
+
+<img src="media/html-login.png" alt="Login screen" width="450">
+
+#### Login screen HTML
+
+<img src="media/html-home.png" width="450">
+
+#### Main dashboard HTML
+
+<img src="media/html-gallery.png" width="450">
+
+#### Gallery view and filter HTML
+
+<img src="media/html-message.png" width="450">
+
+#### Messages screen HTML
+
