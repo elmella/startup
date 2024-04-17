@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     saveMessage(message);
   };
 
-  fetch("message-data.json")
+  fetch("http://localhost:3000/messages")
     .then(response => response.json())
     .then(data => {
       updateUnits(data.units);

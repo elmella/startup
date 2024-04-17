@@ -1,4 +1,4 @@
-fetch('data.json')
+fetch("http://localhost:3000/home")
   .then(response => response.json())
   .then(data => {
     updateGallery(data);
