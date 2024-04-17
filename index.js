@@ -54,27 +54,93 @@ apiRouter.post('/auth/create', async (req, res) => {
     res.status(401).send({ msg: 'Unauthorized' });
   });
 
+
   apiRouter.delete('/auth/logout', (_req, res) => {
     res.clearCookie(authCookieName);
     res.status(204).end();
   });
 
-// Set a simple route for the home page
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  apiRouter.post('/units', async (req, res) => {
+    try {
+        const unitData = req.body;
+        const unit = await DB.addUnit(unitData);
+        res.status(201).json(unit);
+    } catch (error) {
+        console.error('Failed to create unit:', error);
+        res.status(500).json({ error: 'Failed to create unit' });
+    }
 });
 
-app.get('/home', getHomeData, (req, res) => {
-    res.json(req.data);
+  apiRouter.post('/residents', async (req, res) => {
+    try {
+        const residentData = req.body;
+        const resident = await DB.addResident(residentData);
+        res.status(201).json(resident);
+    } catch (error) {
+        console.error('Failed to create resident:', error);
+        res.status(500).json({ error: 'Failed to create resident' });
+    }
 });
 
-app.get('/messages', getMessageData, (req, res) => {
-    res.json(req.data);
+apiRouter.post('/inspections', async (req, res) => {
+    try {
+        const { dueDate } = req.body;
+        const inspection = await DB.createInspection(dueDate);
+        res.status(201).json(inspection);
+    } catch (error) {
+        console.error('Failed to create inspection:', error);
+        res.status(500).json({ error: 'Failed to create inspection' });
+    }
 });
 
-app.get('/inspections', fetchInspections, (req, res) => {
-    res.json(req.inspections);
-  });
+// apiRouter.get('/inspections', async (req, res) => {
+//     try {
+//         const inspections = await DB.fetchInspections();
+//         res.json(inspections);
+//     } catch (error) {
+//         console.error('Failed to fetch inspections:', error);
+//         res.status(500).json({ error: 'Failed to fetch inspections' });
+//     }
+// });
+// Pass in `res` when calling `fetchInspections`
+app.get('/api/inspections', DB.fetchInspections);
+
+// apiRouter.get('/units', async (req, res) => {
+//     try {
+//         const units = await DB.fetchUnits();
+//         res.json(units);
+//     } catch (error) {
+//         console.error('Failed to fetch units:', error);
+//         res.status(500).json({ error: 'Failed to fetch units' });
+//     }
+// });
+
+app.get('/api/units', DB.fetchUnits);
+
+// apiRouter.get('/residents', async (req, res) => {
+//     try {
+//         const residents = await DB.fetchResidents();
+//         res.json(residents);
+//     } catch (error) {
+//         console.error('Failed to fetch residents:', error);
+//         res.status(500).json({ error: 'Failed to fetch residents' });
+//     }
+// });
+
+app.get('/api/residents', DB.fetchResidents);
+
+
+    // Get the home data
+apiRouter.get('/home', getHomeData, (req, res) => {
+    res.send(req.data);
+});
+
+// Get the message data
+apiRouter.get('/message', getMessageData, (req, res) => {
+    res.send(req.data);
+});
+
+// Get the resident data
 
 // Start the server
 app.listen(PORT, () => {

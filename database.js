@@ -5,9 +5,15 @@ const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostna
 const uuid = require('uuid');
 const bcrypt = require('bcrypt');
 
+
+const client = new MongoClient(url, { useUnifiedTopology: true });
+const db = 'test';
+
 (async function testConnection() {
     await client.connect();
-    await db.command({ ping: 1 });
+    console.log('Connected to MongoDB');
+    const database = client.db(db);
+    await database.command({ ping: 1 });
   })().catch((ex) => {
     console.log(`Unable to connect to database with ${url} because ${ex.message}`);
     process.exit(1);
@@ -148,20 +154,25 @@ async function createInspection(dueDate) {
   }
   
   async function fetchInspections(req, res, next) {
-      try {
-        const inspections = await Inspection.find({});
-        req.inspections = inspections;
-        next();
-      } catch (error) {
-        console.error('Error fetching inspections:', error);
-        res.status(500).send('Error fetching inspections');
-      }
+    try {
+      const inspections = await Inspection.find({});
+      console.log('Inspections fetched successfully:', inspections);
+      
+      // Send the inspections back in the response
+      res.json(inspections);
+      
+      next();
+    } catch (error) {
+      console.error('Error fetching inspections:', error);
+      res.status(500).send('Error fetching inspections');
     }
+  }
 
 async function fetchUnits(req, res, next) {
     try {
         const units = await Unit.find({});
-        req.units = units;
+
+        res.json(units);
         next();
     } catch (error) {
         console.error('Error fetching units:', error);
@@ -172,7 +183,7 @@ async function fetchUnits(req, res, next) {
 async function fetchResidents(req, res, next) {
     try {
         const residents = await Resident.find({});
-        req.residents = residents;
+        res.json(residents);
         next();
     } catch (error) {
         console.error('Error fetching residents:', error);
@@ -208,3 +219,13 @@ async function getUser(email) {
       }
 
       
+module.exports = {
+    addUnit,
+    addResident,
+    createInspection,
+    fetchInspections,
+    fetchUnits,
+    fetchResidents,
+    createUser,
+    getUser
+  };
