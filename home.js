@@ -85,10 +85,11 @@ fetch('data.json')
     return svgCode;
   }
   
-
+  
 // Function to dynamically create gallery items
 function updateGallery(data) {
     const galleryContainer = document.querySelector('.gallery-grid');
+    const inspectionContainer = document.querySelector('.inspection-section');
     galleryContainer.innerHTML = ''; // Clear existing content
   
     // Check if data is an array and has content
@@ -113,6 +114,8 @@ function updateGallery(data) {
           return;
         }
   
+        let totalPassed = 0, totalFailed = 0, totalRemaining = 0;
+
         // Iterate over each room
         unit.rooms.forEach(room => {
           // Ensure items exist and are an array
@@ -128,6 +131,8 @@ function updateGallery(data) {
               console.error('Aspects are undefined or not an array in', item);
               return;
             }
+
+            
   
             // Iterate over each aspect
             item.aspects.forEach(aspect => {
@@ -144,12 +149,45 @@ function updateGallery(data) {
                 </figcaption>
               `;
               galleryContainer.appendChild(figure);
+
+              if (aspect.status === 1) {
+                totalPassed++;
+              } else if (aspect.status === 0) {
+                totalFailed++;
+              } else {
+                totalRemaining++;
+              }
+
             });
-          });
+            });
         });
-      });
-    });
-  }
+
+
+        const svg = generateDynamicSVG(totalPassed, totalFailed, totalRemaining);
+        const div = document.createElement('div');
+        div.className = 'row-container';
+        div.innerHTML = `
+        <div class="inspection-meta">
+          <div class="inspection-date">${entry.due_date}</div>
+          <div class="inspection-progress">${svg}</div></div>
+          <div class="photo-button-item">
+            <img src="assets/photo-button.svg" alt="Photo" />
+          </div>
+          <div class="download-button-item">
+            <img src="assets/download-disabled.svg" alt="Download Disabled" />
+          </div>
+        `;
+        inspectionContainer.appendChild(div);
+        });
+    }
+    );
+    }
+
+
+
+
+
+
   
 
   function updateAnalytics(data) {
@@ -211,5 +249,6 @@ function updateGallery(data) {
       notDoneBar.textContent = `${notDonePercent}% Not Done`;
     } else {
       console.error('Not Done bar not found');
-
-      // Generate the SVG code for the pie chart
+    }
+  }
+  
