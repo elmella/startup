@@ -1,56 +1,63 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const mongoose = require('mongoose');
-const { MongoClient } = require('mongodb');
+const cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt');
+const DB = require('./database.js');
 const app = express();
-
-const config = require('./dbConfig.json');
-
-const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
-const client = new MongoClient(url);
-
-// Connect to MongoDB
-mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.log(err));
-
-// Define a schema for the Unit
-const unitSchema = new mongoose.Schema({
-    unit_number: String,
-    unit_id: String,
-    rooms: [{
-        room_name: String,
-        items: [{
-            item_name: String,
-            aspects: [{
-                aspect_name: String,
-            }]
-        }]
-    }],
-    residents: [{
-        resident_name: String,
-        resident_id: String,
-        resident_email: String
-    }]
-});
-
-const residentSchema = new mongoose.Schema({
-    resident_name: String,
-    resident_id: String,
-    resident_email: String,
-    unit: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit' }
-});
-
-// Create a model from the schema
-const Unit = mongoose.model('Unit', unitSchema);
-const Resident = mongoose.model('Resident', residentSchema);
 
 // Port number can be set in the environment or default to 3000
 const PORT = process.env.PORT || 3000;
 
 // Serve static files from the 'public' directory
 app.use(express.static('public'));
+
+// Parse JSON bodies
+app.use(express.json());
+
+// Use the cookie parser
+app.use(cookieParser());
+
+// Trust headers that are forwarded from the proxy so we can determine IP addresses
+app.set('trust proxy', true);
+
+// Router for service endpoints
+var apiRouter = express.Router();
+app.use(`/api`, apiRouter);
+
+// CreateAuth token for a new user
+apiRouter.post('/auth/create', async (req, res) => {
+    if (await DB.getUser(req.body.username)) {
+      res.status(409).send({ msg: 'Existing user' });
+    } else {
+      const user = await DB.createUser(req.body.username, req.body.password);
+  
+      // Set the cookie
+      setAuthCookie(res, user.token);
+  
+      res.send({
+        id: user._id,
+      });
+    }
+  });
+  
+  // GetAuth token for the provided credentials
+  apiRouter.post('/auth/login', async (req, res) => {
+    const user = await DB.getUser(req.body.username);
+    if (user) {
+      if (await bcrypt.compare(req.body.password, user.password)) {
+        setAuthCookie(res, user.token);
+        res.send({ id: user._id });
+        return;
+      }
+    }
+    res.status(401).send({ msg: 'Unauthorized' });
+  });
+
+  apiRouter.delete('/auth/logout', (_req, res) => {
+    res.clearCookie(authCookieName);
+    res.status(204).end();
+  });
 
 // Set a simple route for the home page
 app.get('/', (req, res) => {
@@ -65,28 +72,14 @@ app.get('/messages', getMessageData, (req, res) => {
     res.json(req.data);
 });
 
+app.get('/inspections', fetchInspections, (req, res) => {
+    res.json(req.inspections);
+  });
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
-
-async function addUnit(unitData) {
-  try {
-    const unit = await Unit.create(unitData);
-    console.log('Unit created successfully:', unit);
-  } catch (error) {
-    console.error('Error creating unit:', error);
-  }
-}
-
-async function addResident(residentData) {
-  try {
-      const resident = await Resident.create(residentData);
-      console.log('Resident created successfully:', resident);
-  } catch (error) {
-      console.error('Error creating resident:', error);
-  }
-}
 
 function getHomeData(req, res, next) {
     fs.readFile('data/data.json', 'utf8', (err, data) => {
@@ -111,7 +104,6 @@ function getMessageData(req, res, next) {
         }
     });
 }
-
 
 // const testData = {
 //   unit_number: "101",
@@ -269,13 +261,13 @@ const testDataResident4 = {
 //   }
 // })();
 
-(async () => {
-  try {
-    // await addResident(testDataResident);
-    await addResident(testDataResident2);
-    await addResident(testDataResident3);
-    await addResident(testDataResident4);
-  } catch (error) {
-    console.error('Error:', error);
-  }
-})();
+// (async () => {
+//   try {
+//     await addResident(testDataResident);
+//     await addResident(testDataResident2);
+//     await addResident(testDataResident3);
+//     await addResident(testDataResident4);
+//   } catch (error) {
+//     console.error('Error:', error);
+//   }
+// })();
