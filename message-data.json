@@ -1,0 +1,164 @@
+{
+    "units": [
+        {
+            "name": "The Green",
+            "image": "media/green.jpeg"
+        },
+        {
+            "name": "Liberty Square",
+            "image": "media/libsquare.jpeg"
+        },
+        {
+            "name": "The Village",
+            "image": "media/village.jpeg"
+        }
+    ],
+    "residents": [
+        {
+            "name": "April",
+            "lastActive": "Today, 9:52pm"
+        },
+        {
+            "name": "Cole",
+            "lastActive": "Today, 9:52pm"
+        },
+        {
+            "name": "James",
+            "lastActive": "Today, 9:52pm"
+        },
+        {
+            "name": "Kyle",
+            "lastActive": "Today, 9:52pm"
+        }
+    ],
+    "chats": [
+        {
+            "name": "April",
+            "lastActive": "Today, 9:52pm",
+            "messages": [
+                {
+                    "type": "received",
+                    "content": "Hi, Can you review this photo?"
+                },
+                {
+                    "type": "photo",
+                    "src": "assets/fail-image.svg",
+                    "alt": "Failed Image"
+                },
+                {
+                    "type": "sent",
+                    "content": "Hello!"
+                },
+                {
+                    "type": "sent",
+                    "content": "Sure! Let me give it a look."
+                },
+                {
+                    "type": "photo",
+                    "src": "assets/pass-image.svg",
+                    "alt": "Passed Image"
+                },
+                {
+                    "type": "status",
+                    "content": "Congrats! The photo has been approved"
+                }
+            ]
+        },
+        {
+            "name": "Cole",
+            "lastActive": "Today, 9:52pm",
+            "messages": [
+                {
+                    "type": "received",
+                    "content": "Hi, Can you review this photo?"
+                },
+                {
+                    "type": "photo",
+                    "src": "assets/fail-image.svg",
+                    "alt": "Failed Image"
+                },
+                {
+                    "type": "sent",
+                    "content": "Hello!"
+                },
+                {
+                    "type": "sent",
+                    "content": "Sure! Let me give it a look."
+                },
+                {
+                    "type": "photo",
+                    "src": "assets/pass-image.svg",
+                    "alt": "Passed Image"
+                },
+                {
+                    "type": "status",
+                    "content": "Congrats! The photo has been approved"
+                }
+            ]
+        },
+        {
+            "name": "James",
+            "lastActive": "Today, 9:52pm",
+            "messages": [
+                {
+                    "type": "received",
+                    "content": "Hi, Can you review this photo?"
+                },
+                {
+                    "type": "photo",
+                    "src": "assets/fail-image.svg",
+                    "alt": "Failed Image"
+                },
+                {
+                    "type": "sent",
+                    "content": "Hello!"
+                },
+                {
+                    "type": "sent",
+                    "content": "Sure! Let me give it a look."
+                },
+                {
+                    "type": "photo",
+                    "src": "assets/pass-image.svg",
+                    "alt": "Passed Image"
+                },
+                {
+                    "type": "status",
+                    "content": "Congrats! The photo has been approved"
+                }
+            ]
+        },
+        {
+            "name": "Kyle",
+            "lastActive": "Today, 9:52pm",
+            "messages": [
+                {
+                    "type": "received",
+                    "content": "Hi, Can you review this photo?"
+                },
+                {
+                    "type": "photo",
+                    "src": "assets/fail-image.svg",
+                    "alt": "Failed Image"
+                },
+                {
+                    "type": "sent",
+                    "content": "Hello!"
+                },
+                {
+                    "type": "sent",
+                    "content": "Sure! Let me give it a look."
+                },
+                {
+                    "type": "photo",
+                    "src": "assets/pass-image.svg",
+                    "alt": "Passed Image"
+                },
+                {
+                    "type": "status",
+                    "content": "Congrats! The photo has been approved"
+                }
+            ]
+        }
+    ]
+}
