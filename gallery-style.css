@@ -68,7 +68,7 @@ body, html {
 
 /* Main content styles */
 .main-content {
-  margin-left: 250px; /* Adjusted to match sidebar width */
+  margin-left: 150px; /* Adjusted margin to accommodate sidebar */
   flex: 1;
   padding: 1rem;
   display: flex;

@@ -97,10 +97,7 @@
     padding: 1rem;
   }
   
-  /* Text shadow for headers */
-  .group-header h2, .resident-header h2, .chat-header h2 {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
+
   
   /* Adjusting list styles */
   .list-group, .resident-list, .chat-messages {
@@ -156,4 +153,29 @@
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   }
   
+  .chat-form input[type="text"] {
+    width: 80%; /* Adjust as needed */
+    padding: 10px; /* Adjust as needed */
+    border: none;
+    border-radius: 5px; /* Adjust as needed */
+    margin: 10px 0; /* Adjust as needed */
+    font-size: 16px; /* Adjust as needed */
+    background-color: #f3f3f3; /* Adjust as needed */
+  }
+  
+  .chat-form button[type="submit"] {
+    width: 15%; /* Adjust as needed */
+    padding: 10px; /* Adjust as needed */
+    border: none;
+    border-radius: 5px; /* Adjust as needed */
+    margin: 10px 0; /* Adjust as needed */
+    font-size: 16px; /* Adjust as needed */
+    background-color: #4CAF50; /* Adjust as needed */
+    color: white; /* Adjust as needed */
+    cursor: pointer;
+  }
+  
+  .chat-form button[type="submit"]:hover {
+    background-color: #45a049; /* Adjust as needed */
+  }
   
