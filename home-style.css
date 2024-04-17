@@ -1,64 +1,77 @@
+/* Custom styles */
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
-body,
-html {
+body, html {
   height: 100%;
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   background-color: #f8f8f8;
 }
 
+/* Sidebar styles */
 .sidebar {
-  width: 200px;
-  background-color: #f8f9f9;
-  padding: 20px;
+  width: 250px; /* Adjusted width */
+  background-color: #fff; /* Changed to white for a clean look */
+  padding: 1rem;
   height: 100vh;
   position: fixed;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Added shadow for depth */
   overflow-x: hidden;
+  z-index: 1000; /* Ensure sidebar stacks on top */
 }
 
 .header {
   display: flex;
   align-items: center;
-  margin-top: 80px;
-  margin-bottom: 50px;
+  margin-bottom: 2rem; /* Increased space below header */
 }
 
 .header .logo {
-  width: 45px;
+  width: 60px; /* Increased size */
   height: auto;
+  margin-right: 1rem; /* Added space between logo and title */
 }
 
 .header .site-title {
-  font-size: 30px;
+  font-size: 1.5rem; /* Increased size */
   color: #194b2b;
+  font-weight: bold; /* Made the title bold */
 }
 
+/* Navigation styles */
 .main-nav ul {
   list-style-type: none;
 }
 
 .main-nav ul li a {
   display: block;
-  padding: 10px;
+  padding: 0.5rem 1rem; /* Adjusted padding */
   text-decoration: none;
-  color: #000;
+  color: #333;
+  border-radius: 0.5rem; /* Rounded corners for nav items */
+  transition: background-color 0.2s; /* Smooth transition for hover effect */
 }
 
-.main-nav ul li a.home-tab {
+.main-nav ul li a:hover {
+  background-color: #e8e8e8; /* Hover effect */
+}
+
+.main-nav ul li a.active, .main-nav ul li a.home-tab {
   font-weight: bold;
-  border-bottom: 2px solid #61ef94;
+  color: #4caf50; /* Changed to primary color for active state */
+  background-color: #f0f0f0; /* Light background for active state */
+  border-left: 4px solid #61ef94; /* Added left border for active state */
+  margin-left: -1rem; /* Adjust margin to align with the border */
+  padding-left: calc(1rem + 4px); /* Adjust padding to maintain alignment */
 }
 
+/* Main content styles */
 .main-content {
-  margin-left: 200px;
-  padding: 20px;
+  margin-left: 250px; /* Adjusted to match sidebar width */
+  padding: 1rem;
   display: flex;
-  height: calc(100vh - 40px);
-  overflow: hidden;
+  flex-wrap: wrap; /* Wrap content on smaller screens */
 }
 
 .left-content,
