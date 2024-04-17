@@ -193,3 +193,18 @@ async function createUser(email, password) {
     await user.save();
   }
 
+async function getUser(email) {
+    return User.findOne(
+        { email }
+    );
+    }
+
+    function setAuthCookie(res, authToken) {
+        res.cookie('token', authToken, {
+          secure: true,
+          httpOnly: true,
+          sameSite: 'strict',
+        });
+      }
+
+      
