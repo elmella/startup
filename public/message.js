@@ -1,10 +1,31 @@
 document.addEventListener("DOMContentLoaded", function () {
+  const ws = new WebSocket("wss://example.com/chat");
+  ws.onopen = function () {
+    console.log("WebSocket connection established");
+  };
+
+  ws.onerror = function (error) {
+    console.error("WebSocket Error:", error);
+  };
+
+  ws.onmessage = function (event) {
+    console.log("Message received:", event.data);
+    const message = JSON.parse(event.data);
+    appendMessage(message);
+    saveMessage(message);
+  };
+
   fetch("message-data.json")
-    .then((response) => response.json())
-    .then((data) => {
+    .then(response => response.json())
+    .then(data => {
       updateUnits(data.units);
       updateResidents(data.residents);
-      loadChat(data.chats, "April");
+      document.getElementById('resident-list').addEventListener('click', function(event) {
+        const residentItem = event.target.closest('.resident-item');
+        if (residentItem) {
+          loadChat(data.chats, residentItem.querySelector('.resident-name').textContent);
+        }
+      });
     });
 
   function updateUnits(units) {
@@ -26,6 +47,9 @@ document.addEventListener("DOMContentLoaded", function () {
       item.className = "resident-item";
       item.innerHTML = `<p class="resident-name">${resident.name}</p>
                               <span class="timestamp">${resident.lastActive}</span>`;
+      item.addEventListener("click", function () {
+        loadChat(data.chats, resident.name);
+      });
       residentList.appendChild(item);
     });
   }
@@ -43,16 +67,30 @@ document.addEventListener("DOMContentLoaded", function () {
         appendMessage(message);
       });
     }
+  }
+
+  function saveMessage(message) {
+    // Get the existing messages from localStorage
+    let messages = JSON.parse(localStorage.getItem('messages')) || {};
+  
+    // If this resident has no messages yet, create an array for them
+    if (!messages[message.name]) {
+      messages[message.name] = [];
     }
-
-
+  
+    // Add the new message to this resident's array of messages
+    messages[message.name].push(message);
+  
+    // Save the updated messages back to localStorage
+    localStorage.setItem('messages', JSON.stringify(messages));
+  }
 
   function appendMessage(message) {
     const chatMessages = document.querySelector(".chat-messages");
     let content;
     if (message.type === "photo") {
       content = `<figure class="chat-photo">
-                         <img src="${message.src}" alt="${message.alt}" />
+                           <img src="${message.src}" alt="${message.alt}" />
                        </figure>`;
     } else {
       content = `<li class="${
@@ -60,57 +98,32 @@ document.addEventListener("DOMContentLoaded", function () {
       }">${message.content}</li>`;
     }
     chatMessages.innerHTML += content;
-    }
+    // Optionally scroll to the bottom of the chat window
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
 
-    function saveMessage(message) {
-        // Retrieve the current list of messages from local storage
-        let messages = localStorage.getItem('messages');
-        
-        // Parse the JSON string into an array
-        messages = messages ? JSON.parse(messages) : [];
-        
-        // Add the new message to the list
-        messages.push(message);
-        
-        // Save the updated list back to local storage
-        localStorage.setItem('messages', JSON.stringify(messages));
-      }
-      
-      function appendMessage(message) {
-        const chatMessages = document.querySelector(".chat-messages");
-        let content;
-        if (message.type === "photo") {
-          content = `<figure class="chat-photo">
-                             <img src="${message.src}" alt="${message.alt}" />
-                           </figure>`;
-        } else {
-          content = `<li class="${
-            message.type === "received" ? "message-received" : "message-sent"
-          }">${message.content}</li>`;
-        }
-        chatMessages.innerHTML += content;
-      
-        // Save the message to local storage
-        saveMessage(message);
-      }
+  function sendMessage(message) {
+    const messageString = JSON.stringify(message);
+    ws.send(messageString);
+    console.log("Message sent:", messageString);
+  }
 
-      document.querySelector('.chat-form').addEventListener('submit', function(event) {
-        // Prevent the form from being submitted normally
-        event.preventDefault();
-      
-        // Get the message from the form
-        const message = {
-          type: 'sent', // or 'received', depending on the context
-          content: document.querySelector('.chat-form input[type="text"]').value
-        };
-      
-        // Append the message to the chat
-        appendMessage(message);
-      
-        // Save the message to local storage
-        saveMessage(message);
-      
-        // Clear the form
-        event.target.reset();
-      });
+  document
+    .querySelector(".chat-form")
+    .addEventListener("submit", function (event) {
+      event.preventDefault();
+      const input = document.querySelector('.chat-form input[type="text"]');
+      if (!input.value.trim()) return; // Prevent sending empty messages
+
+      const message = {
+        type: "sent", // Adjust based on the sender (could be 'received' if simulating incoming messages)
+        content: input.value,
+      };
+
+      appendMessage(message);
+      saveMessage(message);
+      sendMessage(message);
+
+      input.value = ""; // Clear input after sending
+    });
 });
