@@ -14,23 +14,23 @@ Property managers do not like them either. Headache of planning and executing hu
 Checkt.ai is a novel ai-powered technology that allows residents to see their cleaning assingments and upload their own photos of the apartment. Ai image-recognition technology then automatically passes or fails the cleaning check. Checkt.ai is a reliable, easy, private, and consistent solution to this pain.
 
 ### Design
-<img src="media/login.png" alt="Login screen" width="450">
+<img src="public/media/login.png" alt="Login screen" width="450">
 
 #### Login screen
 
-<img src="media/home.png" alt="Main dashboard for Property Manager" width="450">
+<img src="public/media/home.png" alt="Main dashboard for Property Manager" width="450">
 
 #### Main dashboard for Property Manager
 
-<img src="media/add-photo.png" alt="Resident application for uploading photos" width="450">
+<img src="public/media/add-photo.png" alt="Resident application for uploading photos" width="450">
 
 #### Resident application for uploading photos
 
-<img src="media/messaging.png" alt="Messages screen" width="450">
+<img src="public/media/messaging.png" alt="Messages screen" width="450">
 
 #### Messages screen
 
-<img src="media/tech-stack.png" alt="The entire tech stack" width="450">
+<img src="public/media/tech-stack.png" alt="The entire tech stack" width="450">
 
 #### The entire tech stack
 
@@ -101,19 +101,19 @@ For this deliverable, I have:
 
 • HTML for the message page where a websocket will be used
 
-<img src="media/html-login.png" alt="Login screen" width="450">
+<img src="public/media/html-login.png" alt="Login screen" width="450">
 
 #### Login screen HTML
 
-<img src="media/html-home.png" width="450">
+<img src="public/media/html-home.png" width="450">
 
 #### Main dashboard HTML
 
-<img src="media/html-gallery.png" width="450">
+<img src="public/media/html-gallery.png" width="450">
 
 #### Gallery view and filter HTML
 
-<img src="media/html-message.png" width="450">
+<img src="public/media/html-message.png" width="450">
 
 #### Messages screen HTML
 
