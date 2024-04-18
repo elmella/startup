@@ -131,6 +131,7 @@ const Unit = mongoose.model("Unit", unitSchema);
 const Resident = mongoose.model("Resident", residentSchema);
 const Inspection = mongoose.model("Inspection", inspectionSchema);
 const User = mongoose.model("User", userSchema);
+const Message = mongoose.model("Message", messageSchema);
 const Chat = mongoose.model("Chat", chatSchema);
 const Chats = mongoose.model("Chats", chatsSchema);
 
