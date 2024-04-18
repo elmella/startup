@@ -225,11 +225,29 @@ body, html {
 }
 
 
-.override-button {
+.pass-button {
   position: absolute;
   bottom: -40px; /* adjust as needed */
   right: 25px; /* adjust as needed */
   z-index: 10; /* ensures it is above other content */
+}
+.fail-button {
+  width: 40%;
+  position: absolute;
+  bottom: -40px; /* adjust as needed */
+  z-index: 10; /* ensures it is above other content */
+  right: 80px; /* adjust as needed */
+  align-self: flex-end;
+  background-color: #EFE161;
+}
+
+.pass-button {
+  width: 40%;
+  position: absolute;
+  bottom: -40px; /* adjust as needed */
+  z-index: 10; /* ensures it is above other content */
+  right: 10px;
+  background-color: #4caf50;
 }
 
 
@@ -283,7 +301,6 @@ body, html {
 
 
 button {
-  background-color: #4CAF50; /* Green */
   border: none;
   color: white;
   padding: 15px 32px;
@@ -295,8 +312,4 @@ button {
   cursor: pointer;
   transition-duration: 0.4s;
   border-radius: 5px;
-}
-
-button:hover {
-  background-color: #45a049;
 }

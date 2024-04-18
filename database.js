@@ -197,28 +197,7 @@ async function fetchInspections(req, res, next) {
 
 async function overrideAspectStatus(dueDate, unitId, roomName, itemName, aspectName, newStatus) {
 
-    console.log({
-        dueDate,
-        unitId,
-        roomName,
-        itemName,
-        aspectName,
-        newStatus
-    
-    })
-
     try {
-    // find the item first
-    const item = await Inspection.findOne({
-        due_date: dueDate,
-        "units.unit_id": unitId,
-        "units.rooms.room_name": roomName,
-        "units.rooms.items.item_name": itemName,
-        "units.rooms.items.aspects.aspect_name": aspectName
-    });
-    
-
-    console.log("Item found:", item);
       const result = await Inspection.updateOne(
         {
           due_date: dueDate,

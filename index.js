@@ -4,6 +4,7 @@ const fs = require('fs');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
 const DB = require('./database.js');
+const AI = require('./openai.js');
 const app = express();
 
 // DB.createSampleData();
@@ -97,7 +98,7 @@ apiRouter.post('/inspections', async (req, res) => {
 });
 
 app.post('/api/overrideAspectStatus', async (req, res) => {
-  console.log('Overriding aspect status');
+  // console.log('Overriding aspect status');
   const { dueDate, unitId, roomName, itemName, aspectName, newStatus } = req.body;
 
   try {
@@ -106,7 +107,8 @@ app.post('/api/overrideAspectStatus', async (req, res) => {
     res.status(200).send('Aspect status overridden successfully');
   } catch (error) {
     console.error('Error overriding aspect status:', error);
-    res.status(500).send('Error overriding aspect status');
+    res.status(500).json({ error: 'Error overriding aspect status' });
+
   }
 });
 

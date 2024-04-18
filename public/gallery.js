@@ -15,8 +15,6 @@ if (username) {
   document.getElementById("username").textContent = username;
 }
 
-
-
 function updateGallery(data) {
   const galleryContainer = document.querySelector(".gallery-grid");
   const residentName = document
@@ -75,14 +73,14 @@ function updateGallery(data) {
             if (matchState) {
               const figure = document.createElement("figure");
               figure.className = "gallery-item";
-                let statusSvg = '';
-                if (aspect.status === 1) {
-                  statusSvg = 'assets/pass.svg';
-                } else if (aspect.status === 2) {
-                  statusSvg = 'assets/fail.svg';
-                } else {
-                  statusSvg = 'assets/no-photo.svg';
-                }
+              let statusSvg = "";
+              if (aspect.status === 1) {
+                statusSvg = "assets/pass.svg";
+              } else if (aspect.status === 2) {
+                statusSvg = "assets/fail.svg";
+              } else {
+                statusSvg = "assets/no-photo.svg";
+              }
 
               figure.innerHTML = `
 
@@ -96,8 +94,8 @@ function updateGallery(data) {
   <div class="status">
     <img src="${statusSvg}" class="status-dot" alt="status" />
   </div>
-  <button class="override-button" onclick="overrideStatus(event, '${entry.due_date}', '${unit.unit_id}', '${room.room_name}', '${item.item_name}', '${aspect.aspect_name}', 1)">Override</button>
-
+  <button class="pass-button" onclick="overrideStatus(event, '${entry.due_date}', '${unit.unit_id}', '${room.room_name}', '${item.item_name}', '${aspect.aspect_name}', 1)">Pass</button>
+  <button class="fail-button" onclick="overrideStatus(event, '${entry.due_date}', '${unit.unit_id}', '${room.room_name}', '${item.item_name}', '${aspect.aspect_name}', 2)">Fail</button>
 
               `;
               galleryContainer.appendChild(figure);
@@ -109,31 +107,54 @@ function updateGallery(data) {
   });
 }
 
-function overrideStatus(event, dueDate, unitId, roomName, itemName, aspectName, newStatus) {
-  console.log('Overriding status:', dueDate, unitId, roomName, itemName, aspectName, newStatus);
+function overrideStatus(
+  event,
+  dueDate,
+  unitId,
+  roomName,
+  itemName,
+  aspectName,
+  newStatus
+) {
+  console.log(
+    "Overriding status:",
+    dueDate,
+    unitId,
+    roomName,
+    itemName,
+    aspectName,
+    newStatus
+  );
   event.preventDefault(); // to stop the form from submitting and reloading the page
-  fetch('http://localhost:3000/api/overrideAspectStatus', {
-    method: 'POST',
+  fetch("http://localhost:3000/api/overrideAspectStatus", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({ dueDate, unitId, roomName, itemName, aspectName, newStatus })
+    body: JSON.stringify({
+      dueDate, unitId, roomName, itemName, aspectName, newStatus,
+    }),
   })
   .then(response => {
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    return response.json();
+    return response.text(); // first get text to see what's there
   })
   .then(data => {
-    console.log('Override successful:', data);
-    alert('Status overridden successfully');
+    console.log('Success:', data);
+    fetch("http://localhost:3000/api/inspections")
+    .then((response) => response.json())
+    .then((data) => {
+      updateGallery(data);
+    });
   })
-  .catch(error => {
-    console.error('Error overriding status:', error);
-    alert('Failed to override status: ' + error.message);
+  .catch((error) => {
+    console.error('Error:', error);
   });
 }
+
+  
 
 document.addEventListener("DOMContentLoaded", () => {
   const filterInputs = document.querySelectorAll(

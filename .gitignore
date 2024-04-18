@@ -3,6 +3,7 @@ node_modules/
 
 
 dbConfig.json
+aiConfig.json
 # ./dbConfig.json
 
 
