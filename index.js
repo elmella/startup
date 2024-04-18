@@ -5,16 +5,22 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
 const DB = require('./database.js');
 const AI = require('./openai.js');
+const cors = require('cors');
 const app = express();
 
-// DB.createSampleData();
 
 
-// Port number can be set in the environment or default to 3000
+// Port number can be set in the environment or default to 4000
 const PORT = process.env.PORT || 4000;
+
+app.use(cors({
+  origin: 'https://startup.cs260party.click'
+}));
+
 
 // Serve static files from the 'public' directory
 app.use(express.static('public'));
+
 
 // Parse JSON bodies
 app.use(express.json());
