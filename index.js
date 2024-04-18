@@ -112,7 +112,22 @@ app.post('/api/overrideAspectStatus', async (req, res) => {
   }
 });
 
+app.get('/api/analyze', async (req, res) => {
+  try {
+      const inspectionId = req.query.id; // Expect an 'id' query parameter with the inspection ID
+      if (!inspectionId) {
+          return res.status(400).json({ message: 'Inspection ID is required' });
+      }
+      const result = await analyzeInspection(inspectionId);
+      res.status(200).json({ success: result, message: 'Analysis completed successfully.' });
+  } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 app.get('/api/inspections', DB.fetchInspections);
+
+app.get('/api/analyze', )
 
 
 app.get('/api/units', DB.fetchUnits);

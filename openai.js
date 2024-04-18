@@ -79,14 +79,16 @@ async function checkImage(imageUrl) {
 }
 
 function parseScores(inputString) {
-    const cleanlinessScore = inputString.match(/True/) ? 1 : 0;
+    const cleanlinessScore = inputString.match(/True/) ? 1 : 2;
     return {
         cleanliness: cleanlinessScore
     };
 }
 
+
 module.exports = {
     encodeImage,
     checkImage,
-    parseScores
+    parseScores,
+    analyzeInspection
 };

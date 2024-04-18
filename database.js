@@ -5,6 +5,7 @@ const config = require("./dbConfig.json");
 const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
 const uuid = require("uuid");
 const bcrypt = require("bcrypt");
+const AI = require('./openai.js');
 
 const client = new MongoClient(url, { useUnifiedTopology: true });
 const db = "test";
@@ -233,6 +234,36 @@ async function overrideAspectStatus(dueDate, unitId, roomName, itemName, aspectN
     }
   }
   
+async function analyzeInspection(inspectionId) {
+    // Fetch the inspection from the database
+    let inspection = await Inspection.findById(inspectionId);
+    if (!inspection) {
+        throw new Error('Inspection not found');
+    }
+
+    for (let unit of inspection.units) {
+        for (let room of unit.rooms) {
+            for (let item of room.items) {
+                for (let aspect of item.aspects) {
+                    if (aspect.image_url && !aspect.override) {
+                        console.log(`Analyzing image for ${room.room_name} - ${item.item_name} - ${aspect.aspect_name}`);
+                        try {
+                            const result = await AI.checkImage(aspect.image_url);
+                            const scores = AI.parseScores(result);
+                            aspect.status = scores.cleanliness; // Update status based on analysis
+                            console.log(`Updated status for ${aspect.aspect_name}: ${aspect.status}`);
+                        } catch (error) {
+                            console.error(`Error analyzing image for ${aspect.aspect_name}: ${error.message}`);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    await inspection.save(); // Save the updated inspection back to the database
+    return true; // Return true to indicate success
+}
 
 async function fetchUnits(req, res, next) {
   try {
@@ -269,6 +300,7 @@ async function createUser(email, password) {
 
   await user.save();
 }
+
 
 async function getUser(email) {
   return User.findOne({ email });
@@ -333,4 +365,5 @@ module.exports = {
   setAuthCookie,
   createSampleData,
   overrideAspectStatus,
+    analyzeInspection
 };

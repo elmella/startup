@@ -346,6 +346,25 @@ function updateAnalytics(data) {
   }
 }
 
+function analyzeInspectionData() {
+  fetch("http://localhost:3000/api/analyze")
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
+      .then(data => {
+          console.log('Analysis completed successfully:', data);
+          alert('Inspection analysis completed successfully.');
+      })
+      .catch(error => {
+          console.error('Error during inspection analysis:', error);
+          alert('Failed to perform analysis: ' + error.message);
+      });
+}
+
+
 function overrideStatus(event, dueDate, unitId, roomName, itemName, aspectName, newStatus) {
   console.log('Overriding status:', dueDate, unitId, roomName, itemName, aspectName, newStatus);
   event.preventDefault(); // to stop the form from submitting and reloading the page
@@ -386,5 +405,13 @@ document.getElementById("backButton").addEventListener("click", () => {
     photoContainer.firstChild !== backButton
   ) {
     photoContainer.firstChild.remove();
+  }
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const analyzeButton = document.getElementById('analyzeButton');
+  if (analyzeButton) {
+      analyzeButton.addEventListener('click', analyzeInspectionData);
   }
 });
