@@ -108,7 +108,6 @@ const userSchema = new mongoose.Schema({
 });
 
 const messageSchema = new Schema({
-  chat_id: { type: mongoose.Schema.Types.ObjectId, ref: "Chat" },
   type: String,
   content: String,
   src: String,
@@ -116,8 +115,10 @@ const messageSchema = new Schema({
 });
 
 const chatSchema = new Schema({
-  name: String,
+  resident_id: { type: mongoose.Schema.Types.ObjectId, ref: "Resident" },
+  resident_name: String,
   unit_id: { type: mongoose.Schema.Types.ObjectId, ref: "Unit" },
+  unit_name: String,
   lastActive: String,
   messages: [messageSchema],
 });
@@ -475,6 +476,43 @@ async function loadSampleUnits(req, res) {
   }
 }
 
+async function generateSampleChatsForUser(userId) {
+  try {
+      // Find all residents associated with the user ID
+      const residents = await Resident.find({ user_id: userId });
+
+      // Iterate over each resident to create chat histories
+      for (let resident of residents) {
+          // Fetch the unit associated with the resident
+          const unit = await Unit.findById(resident.unit_id);
+          if (!unit) continue;  // If no unit found, skip to next resident
+
+          // Create a sample chat for each resident
+          const chat = new Chat({
+              resident_id: resident._id,
+              resident_name: resident.resident_name,
+              unit_id: unit._id,
+              unit_name: unit.unit_number,
+              lastActive: new Date().toISOString(),
+              messages: [
+                  { type: "received", content: "Hi, Can you review this photo?" },
+                  { type: "photo", src: "assets/fail-image.svg", alt: "Failed Image" },
+                  { type: "sent", content: "Hello!" },
+                  { type: "sent", content: "Sure! Let me give it a look." },
+                  { type: "photo", src: "assets/pass-image.svg", alt: "Passed Image" },
+                  { type: "status", content: "Congrats! The photo has been approved" }
+              ]
+          });
+
+          // Save the chat history to the database
+          await chat.save();
+          console.log(`Chat history created for resident ${resident.resident_name}`);
+      }
+  } catch (error) {
+      console.error('Failed to generate chat histories:', error);
+  }
+}
+
 module.exports = {
   addUnit,
   addResident,
@@ -493,4 +531,5 @@ module.exports = {
   addMessage,
   fetchChats,
   deleteUser,
+  generateSampleChatsForUser
 };

@@ -4,6 +4,36 @@ document.addEventListener("DOMContentLoaded", function () {
   configureWebSocket();
 });
 
+const generateDataButton = document.getElementById("generate-data");
+if (generateDataButton) {
+  generateDataButton.addEventListener("click", callGenerateData);
+}
+
+function callGenerateData() {
+  fetch(`${API_BASE_URL}/api/generate-chats`, {
+    method: 'POST',  // Specify the method
+    credentials: 'include',  // Ensures cookies are included in the request
+    headers: {
+        'Content-Type': 'application/json'  // Specify the content type
+    },
+    body: JSON.stringify({ userId: userId })  // Send the user ID from cookies
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.json();
+})
+.then(data => {
+    console.log('Chat histories generated successfully:', data);
+    alert("Chat histories generated successfully!");
+})
+.catch(error => {
+    console.error('Failed to generate chat histories:', error);
+    alert("Failed to generate chat histories: " + error.message);
+});
+}
+
 // Fetch initial message history from the server
 fetch(`${API_BASE_URL}/chats`)
   .then((response) => response.json())
@@ -12,6 +42,8 @@ fetch(`${API_BASE_URL}/chats`)
     updateResidents(data.residents);
     attachChatLoader(data.chats);
   });
+
+  
 
 function updateUnits(units) {
   if (!Array.isArray(units)) {
@@ -98,7 +130,7 @@ function configureWebSocket() {
     console.log("WebSocket connection closed");
   };
 
-  socket.onmessage = (event) => {
+  socket.onmessage = async (event) => {
     console.log("Message received:", event.data);
     const message = JSON.parse(event.data);
     appendMessage(message);
