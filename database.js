@@ -6,8 +6,8 @@ const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostna
 const uuid = require("uuid");
 const bcrypt = require("bcrypt");
 const AI = require("./openai.js");
-const fs = require('fs').promises;
-const path = require('path');
+const fs = require("fs").promises;
+const path = require("path");
 
 const client = new MongoClient(url, { useUnifiedTopology: true });
 const db = "test";
@@ -33,7 +33,7 @@ mongoose
 // Define a schema for the Unit
 const unitSchema = new mongoose.Schema({
   unit_number: String,
-  user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   rooms: [
     {
       room_name: String,
@@ -60,7 +60,7 @@ const unitSchema = new mongoose.Schema({
 
 const inspectionSchema = new mongoose.Schema({
   due_date: String,
-  user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   units: [
     {
       unit_number: String,
@@ -97,8 +97,8 @@ const inspectionSchema = new mongoose.Schema({
 const residentSchema = new mongoose.Schema({
   resident_name: String,
   resident_email: String,
-  unit_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit' },
-  user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  unit_id: { type: mongoose.Schema.Types.ObjectId, ref: "Unit" },
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 
 const userSchema = new mongoose.Schema({
@@ -108,7 +108,7 @@ const userSchema = new mongoose.Schema({
 });
 
 const messageSchema = new Schema({
-    chat_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Chat' },
+  chat_id: { type: mongoose.Schema.Types.ObjectId, ref: "Chat" },
   type: String,
   content: String,
   src: String,
@@ -116,16 +116,15 @@ const messageSchema = new Schema({
 });
 
 const chatSchema = new Schema({
-
   name: String,
-  unit_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit' },
+  unit_id: { type: mongoose.Schema.Types.ObjectId, ref: "Unit" },
   lastActive: String,
   messages: [messageSchema],
 });
 
 const chatsSchema = new Schema({
-    user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    chats: [chatSchema],
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  chats: [chatSchema],
 });
 
 const Unit = mongoose.model("Unit", unitSchema);
@@ -135,135 +134,130 @@ const User = mongoose.model("User", userSchema);
 const Chat = mongoose.model("Chat", chatSchema);
 const Chats = mongoose.model("Chats", chatsSchema);
 
-
 async function verifyUser(req, res, next) {
-    try {
-        const token = req.cookies.authToken;
-        console.log(`Token from cookies: ${token}`);  // Debugging output
-        const user = await User.findOne({ token }).exec();
-        if (!user) {
-            console.log("No user found with the provided token");  // Debugging output
-            return res.status(401).send('Unauthorized: No valid token provided');
-        }
-        req.user = user;
-        console.log(`User set on req object: ${req.user._id}`);  // Debugging output
-        next();
-    } catch (error) {
-        console.error("Authentication failed", error);
-        res.status(500).send('Server Error: Authentication process failed');
+  try {
+    const token = req.cookies.authToken;
+    console.log(`Token from cookies: ${token}`); // Debugging output
+    const user = await User.findOne({ token }).exec();
+    if (!user) {
+      console.log("No user found with the provided token"); // Debugging output
+      return res.status(401).send("Unauthorized: No valid token provided");
     }
+    req.user = user;
+    console.log(`User set on req object: ${req.user._id}`); // Debugging output
+    next();
+  } catch (error) {
+    console.error("Authentication failed", error);
+    res.status(500).send("Server Error: Authentication process failed");
+  }
 }
-  
+
 async function addChat(chatData) {
-    try {
-        const chat = new Chat(chatData);
-        await chat.save();
-        return chat;
-    } catch (error) {
-        console.error('Error adding chat:', error);
-        throw error;  // Rethrow to handle error in the calling function
-    }
+  try {
+    const chat = new Chat(chatData);
+    await chat.save();
+    return chat;
+  } catch (error) {
+    console.error("Error adding chat:", error);
+    throw error; // Rethrow to handle error in the calling function
+  }
 }
 
 async function addMessage(chatId, messageData) {
-    try {
-        const chat = await Chat.findById(chatId);
-        if (!chat) {
-            throw new Error('Chat not found');
-        }
-        chat.messages.push(messageData);
-        await chat.save();
-        return chat;
-    } catch (error) {
-        console.error('Error adding message:', error);
-        throw error;
+  try {
+    const chat = await Chat.findById(chatId);
+    if (!chat) {
+      throw new Error("Chat not found");
     }
+    chat.messages.push(messageData);
+    await chat.save();
+    return chat;
+  } catch (error) {
+    console.error("Error adding message:", error);
+    throw error;
+  }
 }
 
+async function addUnit(unitData) {
+  const unit = new Unit(unitData);
+  await unit.save();
+  return unit;
+}
 
-  
-  async function addUnit(unitData) {
-    const unit = new Unit(unitData);
-    await unit.save();
-    return unit;
-  }
+async function addResident(residentData) {
+  const resident = new Resident(residentData);
+  await resident.save();
+  return resident;
+}
 
-  async function addResident(residentData) {
-    const resident = new Resident(residentData);
-    await resident.save();
-    return resident;
-  }
+async function createInspection(dueDate, userId) {
+  try {
+    // Fetch units from the database that belong to the specified user
+    const units = await Unit.find({ user_id: userId });
 
+    if (units.length === 0) {
+      console.log("No units found for this user:", userId);
+      return; // Optionally handle the case where no units are found
+    }
 
-  async function createInspection(dueDate, userId) {
-    try {
-      // Fetch units from the database that belong to the specified user
-      const units = await Unit.find({ user_id: userId });
-  
-      if (units.length === 0) {
-        console.log("No units found for this user:", userId);
-        return; // Optionally handle the case where no units are found
-      }
-  
-      // Map units to format them for the inspection
-      const formattedUnits = units.map((unit) => ({
-        unit_number: unit.unit_number,
-        unit_id: unit._id,
-        rooms: unit.rooms.map((room) => ({
-          room_name: room.room_name,
-          items: room.items.map((item) => ({
-            item_name: item.item_name,
-            aspects: item.aspects.map((aspect) => ({
-              aspect_name: aspect.aspect_name,
-              // Initialize defaults
-              status: 1,  // Assuming status 1 means 'OK'
-              override: false,
-              image_url: "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_10.jpg",
-            })),
+    // Map units to format them for the inspection
+    const formattedUnits = units.map((unit) => ({
+      unit_number: unit.unit_number,
+      unit_id: unit._id,
+      rooms: unit.rooms.map((room) => ({
+        room_name: room.room_name,
+        items: room.items.map((item) => ({
+          item_name: item.item_name,
+          aspects: item.aspects.map((aspect) => ({
+            aspect_name: aspect.aspect_name,
+            // Initialize defaults
+            status: 1, // Assuming status 1 means 'OK'
+            override: false,
+            image_url:
+              "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_10.jpg",
           })),
         })),
-        residents: unit.residents.map(resident => ({
-          resident_name: resident.resident_name,
-          resident_id: resident.resident_id,
-          resident_email: resident.resident_email,
-        })),
-      }));
-  
-      // Create a new inspection with the formatted units and the specified due date
-      const newInspection = new Inspection({
-        due_date: dueDate,
-        user_id: userId,  // Ensure that the inspection is also associated with the user
-        units: formattedUnits,
-      });
-  
-      // Save the new inspection to the database
-      await newInspection.save();
-      console.log("New inspection created successfully:", newInspection);
-      return newInspection;  // Return the new inspection for further processing if needed
-    } catch (error) {
-      console.error("Error creating new inspection:", error);
-      throw error;  // Rethrow the error for handling in the calling function
-    }
-  }
-  
+      })),
+      residents: unit.residents.map((resident) => ({
+        resident_name: resident.resident_name,
+        resident_id: resident.resident_id,
+        resident_email: resident.resident_email,
+      })),
+    }));
 
-  async function fetchInspections(req, res, next) {
-    try {
-      const inspections = await Inspection.find({ user_id: req.user._id });
-      res.json(inspections);
-    } catch (error) {
-      console.error("Error fetching inspections:", error);
-      if (res) {
-        res.status(500).send("Error fetching inspections");
-      } else {
-        console.error("Response object not available");
-      }
+    // Create a new inspection with the formatted units and the specified due date
+    const newInspection = new Inspection({
+      due_date: dueDate,
+      user_id: userId, // Ensure that the inspection is also associated with the user
+      units: formattedUnits,
+    });
+
+    // Save the new inspection to the database
+    await newInspection.save();
+    console.log("New inspection created successfully:", newInspection);
+    return newInspection; // Return the new inspection for further processing if needed
+  } catch (error) {
+    console.error("Error creating new inspection:", error);
+    throw error; // Rethrow the error for handling in the calling function
+  }
+}
+
+async function fetchInspections(req, res, next) {
+  try {
+    const inspections = await Inspection.find({ user_id: req.user._id });
+    res.json(inspections);
+  } catch (error) {
+    console.error("Error fetching inspections:", error);
+    if (res) {
+      res.status(500).send("Error fetching inspections");
+    } else {
+      console.error("Response object not available");
     }
   }
-  
+}
 
 async function overrideAspectStatus(
-    user_id,
+  user_id,
   dueDate,
   unitId,
   roomName,
@@ -312,7 +306,10 @@ async function overrideAspectStatus(
 async function analyzeInspection(dueDate, userId) {
   console.log(`Analyzing inspection for due date: ${dueDate}`);
   // Fetch the inspection from the database
-  let inspection = await Inspection.findOne({ due_date: dueDate, user_id: userId });
+  let inspection = await Inspection.findOne({
+    due_date: dueDate,
+    user_id: userId,
+  });
   if (!inspection) {
     throw new Error("Inspection not found");
   }
@@ -352,47 +349,46 @@ async function analyzeInspection(dueDate, userId) {
 }
 
 async function fetchUnits(req, res, next) {
-    try {
-        const units = await Unit.find({ user_id: req.user._id });
-        res.json(units);
-    } catch (error) {
-        console.error('Error fetching units:', error);
-        if (res) {
-            res.status(500).send('Error fetching units');
-        } else {
-            console.error('Response object not available');
-        }
-    }
-}
-
-  async function fetchResidents(req, res, next) {
-    try {
-      const residents = await Resident.find({ user_id: req.user._id });
-      res.json(residents);
-    } catch (error) {
-      console.error("Error fetching residents:", error);
-      if (res) {
-        res.status(500).send("Error fetching residents");
-      } else {
-        console.error("Response object not available");
-      }
+  try {
+    const units = await Unit.find({ user_id: req.user._id });
+    res.json(units);
+  } catch (error) {
+    console.error("Error fetching units:", error);
+    if (res) {
+      res.status(500).send("Error fetching units");
+    } else {
+      console.error("Response object not available");
     }
   }
-
-  async function fetchChats(req, res, next) {
-    try {
-        const chats = await Chats.findOne({ user_id: req.user._id });
-        res.json(chats);
-    } catch (error) {
-        console.error('Error fetching chats:', error);
-        if (res) {
-            res.status(500).send('Error fetching chats');
-        } else {
-            console.error('Response object not available');
-        }
-    }
 }
 
+async function fetchResidents(req, res, next) {
+  try {
+    const residents = await Resident.find({ user_id: req.user._id });
+    res.json(residents);
+  } catch (error) {
+    console.error("Error fetching residents:", error);
+    if (res) {
+      res.status(500).send("Error fetching residents");
+    } else {
+      console.error("Response object not available");
+    }
+  }
+}
+
+async function fetchChats(req, res, next) {
+  try {
+    const chats = await Chats.findOne({ user_id: req.user._id });
+    res.json(chats);
+  } catch (error) {
+    console.error("Error fetching chats:", error);
+    if (res) {
+      res.status(500).send("Error fetching chats");
+    } else {
+      console.error("Response object not available");
+    }
+  }
+}
 
 async function createUser(email, password) {
   let user = await User.findOne({ email });
@@ -410,6 +406,22 @@ async function createUser(email, password) {
   return user;
 }
 
+async function deleteUser(req, res, next) {
+  try {
+    const result = await User.findByIdAndDelete(req.user._id);
+    if (!result) {
+      return res.status(404).send('User not found');
+    }
+    return res.status(200).send('User deleted successfully');
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    if (res) {
+      res.status(500).send("Error deleting user");
+    } else {
+      console.error("Response object not available");
+    }
+  }
+}
 async function authenticateUser(email, password) {
   const user = await User.findOne({ email });
   if (!user || !(await bcrypt.compare(password, user.password))) {
@@ -428,35 +440,39 @@ function setAuthCookie(res, authToken) {
 }
 
 async function loadSampleUnits(req, res) {
-    try {
-      const dataPath = path.join(__dirname, 'data', 'sample-unit.json');
-      const sampleDataString = await fs.readFile(dataPath, 'utf8');
-      const sampleData = JSON.parse(sampleDataString);
-  
-      // Assuming req.user._id is set by your authentication middleware
-      sampleData.user_id = req.user._id;  
-      const createdUnit = await addUnit(sampleData);
-  
-      // Create residents with unit_id and user_id
-      const residents = sampleData.residents.map(resident => ({
-          ...resident,
-          unit_id: createdUnit._id,
-          user_id: req.user._id
-      }));
-  
-      // Save all residents
-      const createdResidents = await Promise.all(residents.map(resident => addResident(resident)));
-  
-      res.status(201).json({
-          message: 'Sample unit and residents created successfully',
-          unit: createdUnit,
-          residents: createdResidents
-      });
-    } catch (error) {
-      console.error('Error creating sample units:', error);
-      res.status(500).send({ error: 'Failed to create sample units', details: error.message });
-    }
+  try {
+    const dataPath = path.join(__dirname, "data", "sample-unit.json");
+    const sampleDataString = await fs.readFile(dataPath, "utf8");
+    const sampleData = JSON.parse(sampleDataString);
+
+    // Assuming req.user._id is set by your authentication middleware
+    sampleData.user_id = req.user._id;
+    const createdUnit = await addUnit(sampleData);
+
+    // Create residents with unit_id and user_id
+    const residents = sampleData.residents.map((resident) => ({
+      ...resident,
+      unit_id: createdUnit._id,
+      user_id: req.user._id,
+    }));
+
+    // Save all residents
+    const createdResidents = await Promise.all(
+      residents.map((resident) => addResident(resident))
+    );
+
+    res.status(201).json({
+      message: "Sample unit and residents created successfully",
+      unit: createdUnit,
+      residents: createdResidents,
+    });
+  } catch (error) {
+    console.error("Error creating sample units:", error);
+    res
+      .status(500)
+      .send({ error: "Failed to create sample units", details: error.message });
   }
+}
 
 module.exports = {
   addUnit,
@@ -469,10 +485,11 @@ module.exports = {
   setAuthCookie,
   overrideAspectStatus,
   analyzeInspection,
-    authenticateUser,
-    verifyUser,
-    loadSampleUnits,
-    addChat,
-    addMessage,
-    fetchChats,
+  authenticateUser,
+  verifyUser,
+  loadSampleUnits,
+  addChat,
+  addMessage,
+  fetchChats,
+  deleteUser,
 };

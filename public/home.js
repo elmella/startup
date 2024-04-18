@@ -241,7 +241,7 @@ function downloadCSV(date) {
                   aspect.aspect_name,
                   aspect.status === 1
                     ? "Passed"
-                    : aspect.status === 0
+                    : aspect.status === 2
                     ? "Failed"
                     : "Not Done",
                 ].join(",")
@@ -335,7 +335,7 @@ function analyzeInspectionData(dueDate) {
     .then((data) => {
       console.log("Analysis completed successfully:", data);
       // Update the gallery and analytics with the new data
-      getInspections(); // Ensure this function also follows authentication protocols if needed
+      getInspections();
     })
     .catch((error) => {
       console.error("Error during inspection analysis:", error);

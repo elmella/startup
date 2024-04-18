@@ -3,12 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Project Title</title>
+    <title>Gallery</title>
     <link rel="stylesheet" href="styleguide.css" />
     <link rel="stylesheet" href="gallery-style.css" />
   </head>
   <body>
-    
     <div class="sidebar">
       <header class="header">
         <img class="logo" src="assets/logo.svg" alt="Checkt.ai Logo" />
@@ -30,45 +29,70 @@
         <ul>
           <li>
             <label for="residentName">Resident Name:</label>
-            <input type="text" id="residentName" name="residentName" placeholder="Jane Doe">
+            <input
+              type="text"
+              id="residentName"
+              name="residentName"
+              placeholder="Jane Doe"
+            />
           </li>
           <li>
             <label for="unitNumber">Unit Number:</label>
-            <input type="text" id="unitNumber" name="unitNumber" placeholder="315">
+            <input
+              type="text"
+              id="unitNumber"
+              name="unitNumber"
+              placeholder="315"
+            />
           </li>
           <li>
             <label for="room">Room:</label>
-            <input type="text" id="room" name="room" placeholder="Kitchen">
+            <input type="text" id="room" name="room" placeholder="Kitchen" />
           </li>
           <li>
             <label for="item">Item:</label>
-            <input type="text" id="item" name="item" placeholder="Microwave">
+            <input type="text" id="item" name="item" placeholder="Microwave" />
           </li>
           <li>
             <label for="inspectionDate">Date:</label>
-            <input type="date" id="inspectionDate" name="inspectionDate">
+            <input type="date" id="inspectionDate" name="inspectionDate" />
           </li>
           <li>
             <label>State:</label>
             <div>
-              <input type="checkbox" id="passed" name="state" value="passed" checked>
+              <input
+                type="checkbox"
+                id="passed"
+                name="state"
+                value="passed"
+                checked
+              />
               <label for="passed">Passed</label>
             </div>
             <div>
-              <input type="checkbox" id="failed" name="state" value="failed" checked>
+              <input
+                type="checkbox"
+                id="failed"
+                name="state"
+                value="failed"
+                checked
+              />
               <label for="failed">Failed</label>
             </div>
             <div>
-              <input type="checkbox" id="noPhoto" name="state" value="noPhoto" checked>
+              <input
+                type="checkbox"
+                id="noPhoto"
+                name="state"
+                value="noPhoto"
+                checked
+              />
               <label for="noPhoto">No Photo</label>
             </div>
           </li>
         </ul>
       </section>
     </div>
-    <main class="main-content">
-
-      
 
     <main class="main-content">
       <section class="gallery-section">
@@ -78,9 +102,7 @@
             <img src="assets/close.svg" alt="Close Button" />
           </a>
         </header>
-        <div class="gallery-grid">
-
-        </div>
+        <div class="gallery-grid"></div>
       </section>
     </main>
     <footer class="footer">
@@ -93,6 +115,6 @@
         </div>
       </div>
     </footer>
-    </body>
     <script src="gallery.js"></script>
-  </html>
+  </body>
+</html>

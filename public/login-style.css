@@ -5,7 +5,11 @@
   justify-content: center;
   min-height: 100vh;
   padding: 2rem;
-  background: linear-gradient(180deg, rgb(5, 20.5, 10.5) 0%, rgb(36.53, 42.1, 38.5) 100%);
+  background: linear-gradient(
+    180deg,
+    rgb(5, 20.5, 10.5) 0%,
+    rgb(36.53, 42.1, 38.5) 100%
+  );
 }
 
 .branding {
@@ -79,7 +83,7 @@
 
 .create-account-link {
   display: block;
-  color: #333; /* Changed from #ffffff to #333 to provide contrast against the white background */
+  color: #333;
   text-align: center;
   margin-top: 1rem;
   text-decoration: none;
@@ -89,7 +93,6 @@
 .create-account-link:hover {
   text-decoration: underline;
 }
-
 
 .footer {
   display: flex;

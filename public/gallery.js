@@ -1,8 +1,7 @@
-const API_BASE_URL = 'https://api.startup.cs260party.click';
-
+const API_BASE_URL = "https://api.startup.cs260party.click";
 
 fetch(`${API_BASE_URL}/api/inspections`, {
-  credentials: "include", // Ensures cookies are included in the request
+  credentials: "include",
 })
   .then((response) => {
     if (!response.ok) {
@@ -11,7 +10,6 @@ fetch(`${API_BASE_URL}/api/inspections`, {
     return response.json();
   })
   .then((data) => {
-    // Store the data in LocalStorage
     localStorage.setItem("myData", JSON.stringify(data));
 
     updateGallery(data);
@@ -21,10 +19,8 @@ fetch(`${API_BASE_URL}/api/inspections`, {
     alert("Failed to load inspections: " + error.message);
   });
 
-// Get the username from LocalStorage
 const username = localStorage.getItem("username");
 
-// If a username is stored, use it to replace "Username" in the HTML
 if (username) {
   document.getElementById("username").textContent = username;
 }
@@ -40,7 +36,7 @@ function updateGallery(data) {
   const stateFailed = document.getElementById("failed").checked;
   const stateNoPhoto = document.getElementById("noPhoto").checked;
 
-  galleryContainer.innerHTML = ""; // Clear existing content
+  galleryContainer.innerHTML = "";
 
   data.forEach((entry) => {
     let inspectionDateMatches = true;
@@ -49,25 +45,41 @@ function updateGallery(data) {
     }
 
     entry.units.forEach((unit) => {
-      let unitMatches = !unitNumberInput.value || unit.unit_number === unitNumberInput.value;
-      let residentMatches = !residentNameInput.value || unit.residents.some(resident =>
-        resident.resident_name.toLowerCase().includes(residentNameInput.value.toLowerCase()));
+      let unitMatches =
+        !unitNumberInput.value || unit.unit_number === unitNumberInput.value;
+      let residentMatches =
+        !residentNameInput.value ||
+        unit.residents.some((resident) =>
+          resident.resident_name
+            .toLowerCase()
+            .includes(residentNameInput.value.toLowerCase())
+        );
 
       if (inspectionDateMatches && unitMatches && residentMatches) {
         unit.rooms.forEach((room) => {
-          let roomMatches = !roomNameInput.value || room.room_name.toLowerCase() === roomNameInput.value.toLowerCase();
+          let roomMatches =
+            !roomNameInput.value ||
+            room.room_name.toLowerCase() === roomNameInput.value.toLowerCase();
           room.items.forEach((item) => {
-            let itemMatches = !itemNameInput.value || item.item_name.toLowerCase() === itemNameInput.value.toLowerCase();
+            let itemMatches =
+              !itemNameInput.value ||
+              item.item_name.toLowerCase() ===
+                itemNameInput.value.toLowerCase();
             item.aspects.forEach((aspect) => {
-              let statusMatches = (statePassed && aspect.status === 1) ||
-                                  (stateFailed && aspect.status === 2) ||
-                                  (stateNoPhoto && !aspect.image_url);
+              let statusMatches =
+                (statePassed && aspect.status === 1) ||
+                (stateFailed && aspect.status === 2) ||
+                (stateNoPhoto && !aspect.image_url);
 
               if (roomMatches && itemMatches && statusMatches) {
                 const figure = document.createElement("figure");
                 figure.className = "gallery-item";
-                let statusSvg = aspect.status === 1 ? 'assets/pass.svg' :
-                                aspect.status === 2 ? 'assets/fail.svg' : 'assets/no-photo.svg';
+                let statusSvg =
+                  aspect.status === 1
+                    ? "assets/pass.svg"
+                    : aspect.status === 2
+                    ? "assets/fail.svg"
+                    : "assets/no-photo.svg";
 
                 figure.innerHTML = `
                   <figcaption>
@@ -92,7 +104,6 @@ function updateGallery(data) {
   });
 }
 
-
 function overrideStatus(
   event,
   dueDate,
@@ -102,13 +113,13 @@ function overrideStatus(
   aspectName,
   newStatus
 ) {
-  event.preventDefault(); // to stop the form from submitting and reloading the page
+  event.preventDefault();
   fetch(`${API_BASE_URL}/api/overrideAspectStatus`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: "include", // Ensures cookies are included in the request
+    credentials: "include",
     body: JSON.stringify({
       dueDate,
       unitId,
@@ -122,12 +133,12 @@ function overrideStatus(
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      return response.text(); // You might use response.json() if the server sends JSON
+      return response.text();
     })
     .then((data) => {
       console.log("Success:", data);
       fetch(`${API_BASE_URL}/api/inspections`, {
-        credentials: "include", // Ensures cookies are included in the request
+        credentials: "include",
       })
         .then((response) => {
           if (!response.ok) {
@@ -136,7 +147,6 @@ function overrideStatus(
           return response.json();
         })
         .then((data) => {
-          // Store the data in LocalStorage
           localStorage.setItem("myData", JSON.stringify(data));
 
           updateGallery(data);
@@ -159,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
   filterInputs.forEach((input) => {
     input.addEventListener("change", () => {
       fetch(`${API_BASE_URL}/api/inspections`, {
-        credentials: "include", // Ensures cookies are included in the request
+        credentials: "include",
       })
         .then((response) => {
           if (!response.ok) {
@@ -168,7 +178,6 @@ document.addEventListener("DOMContentLoaded", () => {
           return response.json();
         })
         .then((data) => {
-          // Store the data in LocalStorage
           localStorage.setItem("myData", JSON.stringify(data));
 
           updateGallery(data);
