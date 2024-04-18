@@ -6,6 +6,8 @@ const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostna
 const uuid = require("uuid");
 const bcrypt = require("bcrypt");
 const AI = require("./openai.js");
+const fs = require('fs').promises;
+const path = require('path');
 
 const client = new MongoClient(url, { useUnifiedTopology: true });
 const db = "test";
@@ -31,7 +33,7 @@ mongoose
 // Define a schema for the Unit
 const unitSchema = new mongoose.Schema({
   unit_number: String,
-  unit_id: String,
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   rooms: [
     {
       room_name: String,
@@ -58,6 +60,7 @@ const unitSchema = new mongoose.Schema({
 
 const inspectionSchema = new mongoose.Schema({
   due_date: String,
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   units: [
     {
       unit_number: String,
@@ -93,9 +96,9 @@ const inspectionSchema = new mongoose.Schema({
 
 const residentSchema = new mongoose.Schema({
   resident_name: String,
-  resident_id: String,
   resident_email: String,
-  unit_id: String,
+  unit_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit' },
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 });
 
 const userSchema = new mongoose.Schema({
@@ -118,86 +121,120 @@ const chatSchema = new Schema({
   messages: [messageSchema],
 });
 
+const chatsSchema = new Schema({
+    user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    chats: [chatSchema],
+});
+
 const Unit = mongoose.model("Unit", unitSchema);
 const Resident = mongoose.model("Resident", residentSchema);
 const Inspection = mongoose.model("Inspection", inspectionSchema);
 const User = mongoose.model("User", userSchema);
 const Chat = mongoose.model("Chat", chatSchema);
+const Chats = mongoose.model("Chats", chatsSchema);
 
-async function addUnit(unitData) {
-  try {
-    const unit = await Unit.create(unitData);
-    console.log("Unit created successfully:", unit);
-  } catch (error) {
-    console.error("Error creating unit:", error);
-  }
+
+async function verifyUser(req, res, next) {
+    try {
+        const token = req.cookies.authToken;
+        console.log(`Token from cookies: ${token}`);  // Debugging output
+        const user = await User.findOne({ token }).exec();
+        if (!user) {
+            console.log("No user found with the provided token");  // Debugging output
+            return res.status(401).send('Unauthorized: No valid token provided');
+        }
+        req.user = user;
+        console.log(`User set on req object: ${req.user._id}`);  // Debugging output
+        next();
+    } catch (error) {
+        console.error("Authentication failed", error);
+        res.status(500).send('Server Error: Authentication process failed');
+    }
 }
 
-async function addResident(residentData) {
-  try {
-    const resident = await Resident.create(residentData);
-    console.log("Resident created successfully:", resident);
-  } catch (error) {
-    console.error("Error creating resident:", error);
+  
+  
+  async function addUnit(unitData) {
+    const unit = new Unit(unitData);
+    await unit.save();
+    return unit;
   }
-}
 
-async function createInspection(dueDate) {
-  try {
-    // Fetch all units from the database
-    const units = await Unit.find({});
+  async function addResident(residentData) {
+    const resident = new Resident(residentData);
+    await resident.save();
+    return resident;
+  }
 
-    // Map units to format them for the inspection
-    const formattedUnits = units.map((unit) => ({
-      unit_number: unit.unit_number,
-      unit_id: unit.unit_id,
-      rooms: unit.rooms.map((room) => ({
-        room_name: room.room_name,
-        items: room.items.map((item) => ({
-          item_name: item.item_name,
-          aspects: item.aspects.map((aspect) => ({
-            aspect_name: aspect.aspect_name,
-            // Initialize defaults
-            status: 1,
-            override: false,
-            image_url:
-              "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_10.jpg",
+  async function createInspection(dueDate, userId) {
+    try {
+      // Fetch units from the database that belong to the specified user
+      const units = await Unit.find({ user_id: userId });
+  
+      if (units.length === 0) {
+        console.log("No units found for this user:", userId);
+        return; // Optionally handle the case where no units are found
+      }
+  
+      // Map units to format them for the inspection
+      const formattedUnits = units.map((unit) => ({
+        unit_number: unit.unit_number,
+        unit_id: unit._id,
+        rooms: unit.rooms.map((room) => ({
+          room_name: room.room_name,
+          items: room.items.map((item) => ({
+            item_name: item.item_name,
+            aspects: item.aspects.map((aspect) => ({
+              aspect_name: aspect.aspect_name,
+              // Initialize defaults
+              status: 1,  // Assuming status 1 means 'OK'
+              override: false,
+              image_url: "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_10.jpg",
+            })),
           })),
         })),
-      })),
-      residents: unit.residents,
-    }));
-
-    // Create a new inspection with the formatted units and the specified due date
-    const newInspection = new Inspection({
-      due_date: dueDate,
-      units: formattedUnits,
-    });
-
-    // Save the new inspection to the database
-    await newInspection.save();
-    console.log("New inspection created successfully:", newInspection);
-  } catch (error) {
-    console.error("Error creating new inspection:", error);
+        residents: unit.residents.map(resident => ({
+          resident_name: resident.resident_name,
+          resident_id: resident.resident_id,
+          resident_email: resident.resident_email,
+        })),
+      }));
+  
+      // Create a new inspection with the formatted units and the specified due date
+      const newInspection = new Inspection({
+        due_date: dueDate,
+        user_id: userId,  // Ensure that the inspection is also associated with the user
+        units: formattedUnits,
+      });
+  
+      // Save the new inspection to the database
+      await newInspection.save();
+      console.log("New inspection created successfully:", newInspection);
+      return newInspection;  // Return the new inspection for further processing if needed
+    } catch (error) {
+      console.error("Error creating new inspection:", error);
+      throw error;  // Rethrow the error for handling in the calling function
+    }
   }
-}
+  
 
-async function fetchInspections(req, res, next) {
-  try {
-    const inspections = await Inspection.find({});
-    // console.log("Inspections fetched successfully:", inspections);
-
-    // Send the inspections back in the response
-    res.json(inspections);
-
-    next();
-  } catch (error) {
-    console.error("Error fetching inspections:", error);
-    res.status(500).send("Error fetching inspections");
+  async function fetchInspections(req, res, next) {
+    try {
+      const inspections = await Inspection.find({ user_id: req.user._id });
+      res.json(inspections);
+    } catch (error) {
+      console.error("Error fetching inspections:", error);
+      if (res) {
+        res.status(500).send("Error fetching inspections");
+      } else {
+        console.error("Response object not available");
+      }
+    }
   }
-}
+  
 
 async function overrideAspectStatus(
+    user_id,
   dueDate,
   unitId,
   roomName,
@@ -208,6 +245,7 @@ async function overrideAspectStatus(
   try {
     const result = await Inspection.updateOne(
       {
+        user_id: user_id,
         due_date: dueDate,
         "units.unit_id": unitId,
         "units.rooms.room_name": roomName,
@@ -242,10 +280,10 @@ async function overrideAspectStatus(
   }
 }
 
-async function analyzeInspection(dueDate) {
+async function analyzeInspection(dueDate, userId) {
   console.log(`Analyzing inspection for due date: ${dueDate}`);
   // Fetch the inspection from the database
-  let inspection = await Inspection.findOne({ due_date: dueDate });
+  let inspection = await Inspection.findOne({ due_date: dueDate, user_id: userId });
   if (!inspection) {
     throw new Error("Inspection not found");
   }
@@ -285,27 +323,32 @@ async function analyzeInspection(dueDate) {
 }
 
 async function fetchUnits(req, res, next) {
-  try {
-    const units = await Unit.find({});
-
-    res.json(units);
-    next();
-  } catch (error) {
-    console.error("Error fetching units:", error);
-    res.status(500).send("Error fetching units");
-  }
+    try {
+        const units = await Unit.find({ user_id: req.user._id });
+        res.json(units);
+    } catch (error) {
+        console.error('Error fetching units:', error);
+        if (res) {
+            res.status(500).send('Error fetching units');
+        } else {
+            console.error('Response object not available');
+        }
+    }
 }
 
-async function fetchResidents(req, res, next) {
-  try {
-    const residents = await Resident.find({});
-    res.json(residents);
-    next();
-  } catch (error) {
-    console.error("Error fetching residents:", error);
-    res.status(500).send("Error fetching residents");
+  async function fetchResidents(req, res, next) {
+    try {
+      const residents = await Resident.find({ user_id: req.user._id });
+      res.json(residents);
+    } catch (error) {
+      console.error("Error fetching residents:", error);
+      if (res) {
+        res.status(500).send("Error fetching residents");
+      } else {
+        console.error("Response object not available");
+      }
+    }
   }
-}
 
 async function createUser(email, password) {
   let user = await User.findOne({ email });
@@ -344,44 +387,36 @@ function setAuthCookie(res, authToken) {
   });
 }
 
-async function createSampleData() {
-  try {
-    // Create Chats
-    const chat1 = new Chat({
-      name: "John Doe",
-      unit_id: "12345",
-      lastActive: "Today, 9:52pm",
-      messages: [
-        { type: "received", content: "Hi, Can you review this photo?" },
-        { type: "photo", src: "assets/fail-image.svg", alt: "Failed Image" },
-        { type: "sent", content: "Hello!" },
-        { type: "sent", content: "Sure! Let me give it a look." },
-        { type: "photo", src: "assets/pass-image.svg", alt: "Passed Image" },
-        { type: "status", content: "Congrats! The photo has been approved" },
-      ],
-    });
-
-    const chat2 = new Chat({
-      name: "Jane Doe",
-      unit_id: "12345",
-      lastActive: "Today, 9:52pm",
-      messages: [
-        { type: "received", content: "Hi, Can you review this photo?" },
-        { type: "photo", src: "assets/fail-image.svg", alt: "Failed Image" },
-        { type: "sent", content: "Hello!" },
-        { type: "sent", content: "Sure! Let me give it a look." },
-        { type: "photo", src: "assets/pass-image.svg", alt: "Passed Image" },
-        { type: "status", content: "Congrats! The photo has been approved" },
-      ],
-    });
-    await chat1.save();
-    await chat2.save();
-
-    console.log("Sample data created successfully!");
-  } catch (error) {
-    console.error("Error creating sample data:", error);
+async function loadSampleUnits(req, res) {
+    try {
+      const dataPath = path.join(__dirname, 'data', 'sample-unit.json');
+      const sampleDataString = await fs.readFile(dataPath, 'utf8');
+      const sampleData = JSON.parse(sampleDataString);
+  
+      // Assuming req.user._id is set by your authentication middleware
+      sampleData.user_id = req.user._id;  
+      const createdUnit = await addUnit(sampleData);
+  
+      // Create residents with unit_id and user_id
+      const residents = sampleData.residents.map(resident => ({
+          ...resident,
+          unit_id: createdUnit._id,
+          user_id: req.user._id
+      }));
+  
+      // Save all residents
+      const createdResidents = await Promise.all(residents.map(resident => addResident(resident)));
+  
+      res.status(201).json({
+          message: 'Sample unit and residents created successfully',
+          unit: createdUnit,
+          residents: createdResidents
+      });
+    } catch (error) {
+      console.error('Error creating sample units:', error);
+      res.status(500).send({ error: 'Failed to create sample units', details: error.message });
+    }
   }
-}
 
 module.exports = {
   addUnit,
@@ -392,8 +427,9 @@ module.exports = {
   fetchResidents,
   createUser,
   setAuthCookie,
-  createSampleData,
   overrideAspectStatus,
   analyzeInspection,
-    authenticateUser
+    authenticateUser,
+    verifyUser,
+    loadSampleUnits,
 };

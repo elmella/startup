@@ -26,6 +26,8 @@ function handleLogin(event) {
   })
   .then(data => {
       localStorage.setItem('username', email);  // Save the email as username in localStorage
+      localStorage.setItem('userId', data.id);  // Save the user ID in localStorage
+      
       window.location.href = 'home.html';  // Redirect to home page
   })
   .catch(error => {

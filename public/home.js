@@ -1,12 +1,24 @@
-fetch("http://localhost:3000/api/inspections")
-  .then((response) => response.json())
-  .then((data) => {
-    // Store the data in LocalStorage
-    localStorage.setItem("myData", JSON.stringify(data));
+fetch("http://localhost:3000/api/inspections", {
+  credentials: 'include'  // Ensures cookies are included in the request
+})
+.then(response => {
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  return response.json();
+})
+.then(data => {
+  // Store the data in LocalStorage
+  localStorage.setItem("myData", JSON.stringify(data));
 
-    updateGallery(data);
-    updateAnalytics(data);
-  });
+  updateGallery(data);
+  updateAnalytics(data);
+})
+.catch(error => {
+  console.error('Failed to fetch inspections:', error);
+  alert("Failed to load inspections: " + error.message);
+});
+
 
 // Get the username from LocalStorage
 const username = localStorage.getItem("username");
@@ -349,28 +361,30 @@ function analyzeInspectionData(dueDate) {
   // Show loading icon
   document.getElementById("loadingIcon").style.display = "flex";
 
-  fetch(`http://localhost:3000/api/analyze/${dueDate}`)
+  fetch(`http://localhost:3000/api/analyze/${dueDate}`, {
+    credentials: 'include' // Ensures cookies, including authentication cookies, are sent with the request
+  })
     .then((response) => {
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error(`Network response was not ok: ${response.status}`);
       }
       return response.json();
     })
     .then((data) => {
       console.log("Analysis completed successfully:", data);
       // Update the gallery and analytics with the new data
-      getInspections();
+      getInspections(); // Ensure this function also follows authentication protocols if needed
     })
     .catch((error) => {
       console.error("Error during inspection analysis:", error);
-      alert("Failed to perform analysis: " + error.message);
+      alert(`Failed to perform analysis: ${error.message}`);
     })
     .finally(() => {
       // Hide loading icon
       document.getElementById("loadingIcon").style.display = "none";
-
     });
 }
+
 
 function getInspections() {
   fetch("http://localhost:3000/api/inspections")
@@ -384,18 +398,66 @@ function getInspections() {
     });
 }
 
-// document.getElementById("backButton").addEventListener("click", () => {
-//   const photoContainer = document.getElementById("photoContainer");
-//   const backButton = document.getElementById("backButton");
 
-//   photoContainer.style.display = "none"; // Hide the container
-//   backButton.style.display = "none"; // Hide the back button
+function createSampleUnits() {
+  fetch("http://localhost:3000/api/sample-units", {
+    method: 'POST',  // POST method to create data
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    credentials: 'include'  // Ensure cookies are sent with the request for authentication
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Sample units created:', data);
+    // Additional actions based on successful creation
+  })
+  .catch(error => {
+    console.error('Failed to create sample units:', error);
+  });
+}
 
-//   // remove the images from the container
-//   while (
-//     photoContainer.firstChild &&
-//     photoContainer.firstChild !== backButton
-//   ) {
-//     photoContainer.firstChild.remove();
-//   }
-// });
+document.getElementById('createInspectionButton').addEventListener('click', createInspectionForSampleUnits);
+
+function createInspectionForSampleUnits() {
+    // Assuming you already have some sample units data stored or you know the user ID etc.
+    const dueDate = new Date().toISOString().slice(0, 10); // e.g., '2023-09-15'
+    const userId = localStorage.getItem("userId"); // Ensure the user ID is stored in localStorage or obtained dynamically
+
+    fetch(`http://localhost:3000/api/inspections`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            dueDate: dueDate,
+            userId: userId // Send the user ID whose units you want to inspect
+        }),
+        credentials: 'include' // Include cookies for authentication if necessary
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Inspection created successfully:', data);
+        alert("Inspection created successfully!");
+        // You might want to update the UI or fetch new data here
+    })
+    .catch(error => {
+        console.error('Failed to create inspection:', error);
+        alert("Failed to create inspection: " + error.message);
+    });
+}
+
+// Example of calling createSampleUnits on button click or as needed
+document.getElementById('createSampleButton').addEventListener('click', createSampleUnits);

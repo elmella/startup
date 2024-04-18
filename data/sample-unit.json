@@ -1,0 +1,268 @@
+{
+    "unit_number": "101",
+    "unit_id": "123456",
+    "rooms": [
+        {
+            "room_name": "Kitchen",
+            "items": [
+                {
+                    "item_name": "Fridge",
+                    "aspects": [
+                        {
+                            "aspect_name": "Fridge Outside"
+                        },
+                        {
+                            "aspect_name": "Fridge Inside"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Oven",
+                    "aspects": [
+                        {
+                            "aspect_name": "Oven Outside"
+                        },
+                        {
+                            "aspect_name": "Oven Inside"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Microwave",
+                    "aspects": [
+                        {
+                            "aspect_name": "Microwave Outside"
+                        },
+                        {
+                            "aspect_name": "Microwave Inside"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Dishwasher",
+                    "aspects": [
+                        {
+                            "aspect_name": "Dishwasher Outside"
+                        },
+                        {
+                            "aspect_name": "Dishwasher Inside"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Sink",
+                    "aspects": [
+                        {
+                            "aspect_name": "Sink"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Cupboards",
+                    "aspects": [
+                        {
+                            "aspect_name": "Cupboards"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Drawers",
+                    "aspects": [
+                        {
+                            "aspect_name": "Drawers"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Benchtops",
+                    "aspects": [
+                        {
+                            "aspect_name": "Benchtops"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Splashback",
+                    "aspects": [
+                        {
+                            "aspect_name": "Splashback"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Floor",
+                    "aspects": [
+                        {
+                            "aspect_name": "Floor"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Windows",
+                    "aspects": [
+                        {
+                            "aspect_name": "Windows"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Window Sills",
+                    "aspects": [
+                        {
+                            "aspect_name": "Window Sills"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Blinds",
+                    "aspects": [
+                        {
+                            "aspect_name": "Blinds"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "room_name": "Bathroom",
+            "items": [
+                {
+                    "item_name": "Shower",
+                    "aspects": [
+                        {
+                            "aspect_name": "Shower Floor"
+                        },
+                        {
+                            "aspect_name": "Shower Walls"
+                        },
+                        {
+                            "aspect_name": "Shower Glass"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Bath",
+                    "aspects": [
+                        {
+                            "aspect_name": "Bath"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Vanity",
+                    "aspects": [
+                        {
+                            "aspect_name": "Counter"
+                        },
+                        {
+                            "aspect_name": "Sink"
+                        },
+                        {
+                            "aspect_name": "Faucet"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Toilet",
+                    "aspects": [
+                        {
+                            "aspect_name": "Toilet Bowl"
+                        },
+                        {
+                            "aspect_name": "Toilet Seat"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Mirror",
+                    "aspects": [
+                        {
+                            "aspect_name": "Mirror"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Cupboards",
+                    "aspects": [
+                        {
+                            "aspect_name": "Cupboards"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Floor",
+                    "aspects": [
+                        {
+                            "aspect_name": "Floor"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Windows",
+                    "aspects": [
+                        {
+                            "aspect_name": "Windows"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "room_name": "Bedroom",
+            "items": [
+                {
+                    "item_name": "Bed",
+                    "aspects": [
+                        {
+                            "aspect_name": "Bed"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Wardrobe",
+                    "aspects": [
+                        {
+                            "aspect_name": "Wardrobe"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Windows",
+                    "aspects": [
+                        {
+                            "aspect_name": "Windows"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Window Sills",
+                    "aspects": [
+                        {
+                            "aspect_name": "Window Sills"
+                        }
+                    ]
+                },
+                {
+                    "item_name": "Blinds",
+                    "aspects": [
+                        {
+                            "aspect_name": "Blinds"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "residents": [
+        {
+            "resident_name": "John Doe",
+            "resident_id": "123456",
+            "resident_email": "johndoe@gmail.com"
+        },
+        {
+            "resident_name": "Jane Doe",
+            "resident_id": "654321",
+            "resident_email": "janedoe@gmail.com"
+        }
+    ]
+}

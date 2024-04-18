@@ -1,10 +1,21 @@
-fetch("http://localhost:3000/api/inspections")
-  .then((response) => response.json())
+fetch("http://localhost:3000/api/inspections", {
+  credentials: "include", // Ensures cookies are included in the request
+})
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.json();
+  })
   .then((data) => {
     // Store the data in LocalStorage
     localStorage.setItem("myData", JSON.stringify(data));
 
     updateGallery(data);
+  })
+  .catch((error) => {
+    console.error("Failed to fetch inspections:", error);
+    alert("Failed to load inspections: " + error.message);
   });
 
 // Get the username from LocalStorage
@@ -131,6 +142,7 @@ function overrideStatus(
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: 'include', // Ensures cookies are included in the request
     body: JSON.stringify({
       dueDate,
       unitId,
@@ -140,24 +152,41 @@ function overrideStatus(
       newStatus,
     }),
   })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.text(); // first get text to see what's there
-    })
-    .then((data) => {
-      console.log("Success:", data);
-      fetch("http://localhost:3000/api/inspections")
-        .then((response) => response.json())
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.text(); // You might use response.json() if the server sends JSON
+  })
+  .then(data => {
+    console.log('Success:', data);
+      fetch("http://localhost:3000/api/inspections", {
+        credentials: "include", // Ensures cookies are included in the request
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
         .then((data) => {
+          // Store the data in LocalStorage
+          localStorage.setItem("myData", JSON.stringify(data));
+
           updateGallery(data);
+        })
+        .catch((error) => {
+          console.error("Failed to fetch inspections:", error);
+          alert("Failed to load inspections: " + error.message);
         });
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+  })
+  .catch((error) => {
+    console.error("Failed to override status:", error);
+    alert("Failed to override status: " + error.message);
+  }
+  );
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const filterInputs = document.querySelectorAll(
@@ -165,10 +194,24 @@ document.addEventListener("DOMContentLoaded", () => {
   );
   filterInputs.forEach((input) => {
     input.addEventListener("change", () => {
-      fetch("http://localhost:3000/api/inspections")
-        .then((response) => response.json())
+      fetch("http://localhost:3000/api/inspections", {
+        credentials: "include", // Ensures cookies are included in the request
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
         .then((data) => {
+          // Store the data in LocalStorage
+          localStorage.setItem("myData", JSON.stringify(data));
+
           updateGallery(data);
+        })
+        .catch((error) => {
+          console.error("Failed to fetch inspections:", error);
+          alert("Failed to load inspections: " + error.message);
         });
     });
   });
