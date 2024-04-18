@@ -108,6 +108,7 @@ const userSchema = new mongoose.Schema({
 });
 
 const messageSchema = new Schema({
+    chat_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Chat' },
   type: String,
   content: String,
   src: String,
@@ -115,8 +116,9 @@ const messageSchema = new Schema({
 });
 
 const chatSchema = new Schema({
+
   name: String,
-  unit_id: String,
+  unit_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit' },
   lastActive: String,
   messages: [messageSchema],
 });
@@ -151,8 +153,34 @@ async function verifyUser(req, res, next) {
         res.status(500).send('Server Error: Authentication process failed');
     }
 }
-
   
+async function addChat(chatData) {
+    try {
+        const chat = new Chat(chatData);
+        await chat.save();
+        return chat;
+    } catch (error) {
+        console.error('Error adding chat:', error);
+        throw error;  // Rethrow to handle error in the calling function
+    }
+}
+
+async function addMessage(chatId, messageData) {
+    try {
+        const chat = await Chat.findById(chatId);
+        if (!chat) {
+            throw new Error('Chat not found');
+        }
+        chat.messages.push(messageData);
+        await chat.save();
+        return chat;
+    } catch (error) {
+        console.error('Error adding message:', error);
+        throw error;
+    }
+}
+
+
   
   async function addUnit(unitData) {
     const unit = new Unit(unitData);
@@ -165,6 +193,7 @@ async function verifyUser(req, res, next) {
     await resident.save();
     return resident;
   }
+
 
   async function createInspection(dueDate, userId) {
     try {
@@ -350,6 +379,21 @@ async function fetchUnits(req, res, next) {
     }
   }
 
+  async function fetchChats(req, res, next) {
+    try {
+        const chats = await Chats.findOne({ user_id: req.user._id });
+        res.json(chats);
+    } catch (error) {
+        console.error('Error fetching chats:', error);
+        if (res) {
+            res.status(500).send('Error fetching chats');
+        } else {
+            console.error('Response object not available');
+        }
+    }
+}
+
+
 async function createUser(email, password) {
   let user = await User.findOne({ email });
   if (user) {
@@ -373,10 +417,6 @@ async function authenticateUser(email, password) {
   }
   return user;
 }
-
-// async function getUser(email) {
-//   return User.findOne({ email });
-// }
 
 function setAuthCookie(res, authToken) {
   const authCookieName = "authToken"; // Name of the cookie for authentication token
@@ -432,4 +472,7 @@ module.exports = {
     authenticateUser,
     verifyUser,
     loadSampleUnits,
+    addChat,
+    addMessage,
+    fetchChats,
 };

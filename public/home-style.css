@@ -156,19 +156,36 @@ body, html {
   padding: 0 10px;
 }
 
-.photo-button-item,
+.photo-button-item {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+
+}
 .download-button-item {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+
 }
 
-.photo-button-item img,
+.photo-button-item img {
+  object-fit: cover;
+  width: 3vw;
+  height: 3vw;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+}
 .download-button-item img {
   object-fit: cover;
   width: 3vw;
   height: 3vw;
+
 }
 
 .inspection-progress {
@@ -438,4 +455,31 @@ h2 {
   color: #194b2b;
   font-weight: bold;
   align-self: center;
+}
+
+
+/* CSS for the Create Sample Units button */
+#createSampleButton {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* CSS for the Create Inspection button */
+#createInspectionButton {
+  background-color: #008CBA; /* Blue */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
 }

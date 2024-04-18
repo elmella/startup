@@ -117,9 +117,9 @@ function updateGallery(data) {
     console.error("Data is undefined or not an array");
     return;
   }
-  while (inspectionContainer.firstChild) {
-    inspectionContainer.removeChild(inspectionContainer.firstChild);
-  }
+  // while (inspectionContainer.firstChild) {
+  //   inspectionContainer.removeChild(inspectionContainer.firstChild);
+  // }
   // Iterate over each entry in the data array
   data.forEach((entry) => {
     // Ensure units exist and are an array
@@ -216,47 +216,6 @@ function updateGallery(data) {
   });
 }
 
-// function showPhotos(date) {
-//   console.log("Showing photos for inspection on", date);
-//   const data = JSON.parse(localStorage.getItem("myData"));
-//   const photos = [];
-
-//   data.forEach((entry) => {
-//     if (entry.due_date === date) {
-//       entry.units.forEach((unit) => {
-//         unit.rooms.forEach((room) => {
-//           room.items.forEach((item) => {
-//             item.aspects.forEach((aspect) => {
-//               if (aspect.image_url) {
-//                 photos.push(aspect.image_url);
-//               }
-//             });
-//           });
-//         });
-//       });
-//     }
-//   });
-
-//   const photoContainer = document.getElementById("photoContainer");
-//   const backButton = document.getElementById("backButton");
-
-//   photoContainer.style.display = "block"; // Make the container visible
-//   backButton.style.display = "block"; // Make the back button visible
-//   // Clear the existing images
-//   photoContainer.innerHTML = "";
-//   photoContainer.appendChild(backButton); // Append the back button to the container
-//   if (photos.length === 0) {
-//     photoContainer.textContent = "No photos found for this inspection";
-//     photoContainer.appendChild(backButton)
-//   } else {
-//     photos.forEach((url) => {
-//       const img = document.createElement("img");
-//       img.src = url;
-//       img.style.marginRight = "10px"; // Add some space between the images
-//       photoContainer.appendChild(img);
-//     });
-//   }
-// }
 
 function downloadCSV(date) {
   const data = JSON.parse(localStorage.getItem("myData"));

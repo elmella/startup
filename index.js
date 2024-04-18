@@ -131,6 +131,8 @@ apiRouter.get('/residents', DB.fetchResidents);
 
 apiRouter.get('/inspections', DB.fetchInspections);
 
+apiRouter.get('/chats', DB.fetchChats);
+
 
 // Get the message data
 apiRouter.get('/chats/:chatId', async (req, res) => {

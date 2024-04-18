@@ -26,15 +26,103 @@ if (username) {
   document.getElementById("username").textContent = username;
 }
 
+// function updateGallery(data) {
+//   const galleryContainer = document.querySelector(".gallery-grid");
+//   const residentName = document
+//     .getElementById("residentName")
+//     .value.toLowerCase();
+//   const unitNumber = document.getElementById("unitNumber").value;
+//   const roomName = document.getElementById("room").value.toLowerCase();
+//   const itemName = document.getElementById("item").value.toLowerCase();
+//   const inspectionDate = document.getElementById("inspectionDate").value;
+//   const statePassed = document.getElementById("passed").checked;
+//   const stateFailed = document.getElementById("failed").checked;
+//   const stateNoPhoto = document.getElementById("noPhoto").checked;
+
+//   galleryContainer.innerHTML = ""; // Clear existing content
+
+//   data.forEach((entry) => {
+//     if (inspectionDate && entry.due_date !== inspectionDate) {
+//       return;
+//     }
+
+//     entry.units.forEach((unit) => {
+//       if (unitNumber && unit.unit_number !== unitNumber) {
+//         return;
+//       }
+
+//       const hasMatchingResident = unit.residents.some((resident) =>
+//         resident.resident_name.toLowerCase().includes(residentName)
+//       );
+
+//       if (residentName && !hasMatchingResident) {
+//         return;
+//       }
+
+//       unit.rooms.forEach((room) => {
+//         if (roomName && room.room_name.toLowerCase() !== roomName) {
+//           return;
+//         }
+
+//         room.items.forEach((item) => {
+//           if (itemName && item.item_name.toLowerCase() !== itemName) {
+//             return;
+//           }
+
+//           item.aspects.forEach((aspect) => {
+//             let matchState = true;
+//             if (statePassed && aspect.status !== 1) {
+//               matchState = false;
+//             }
+//             if (stateFailed && aspect.status !== 2) {
+//               matchState = false;
+//             }
+//             if (stateNoPhoto && aspect.image_url) {
+//               matchState = false;
+//             }
+
+//             if (matchState) {
+//               const figure = document.createElement("figure");
+//               figure.className = "gallery-item";
+//               let statusSvg = "";
+//               if (aspect.status === 1) {
+//                 statusSvg = "assets/pass.svg";
+//               } else if (aspect.status === 2) {
+//                 statusSvg = "assets/fail.svg";
+//               } else {
+//                 statusSvg = "assets/no-photo.svg";
+//               }
+
+//               figure.innerHTML = `
+//   <figcaption>
+//     <p>${entry.due_date}</p>
+//     <p>${room.room_name}</p>
+//     <p>${item.item_name}</p>
+//   </figcaption>
+//   <img src="${aspect.image_url}" alt="${aspect.aspect_name}" />
+//   <div class="status">
+//     <img src="${statusSvg}" class="status-dot" alt="status" />
+//   </div>
+//   <button class="pass-button" onclick="overrideStatus(event, '${entry.due_date}', '${unit.unit_id}', '${room.room_name}', '${item.item_name}', '${aspect.aspect_name}', 1)">Pass</button>
+//   <button class="fail-button" onclick="overrideStatus(event, '${entry.due_date}', '${unit.unit_id}', '${room.room_name}', '${item.item_name}', '${aspect.aspect_name}', 2)">Fail</button>
+
+//               `;
+//               galleryContainer.appendChild(figure);
+//             }
+//           });
+//         });
+//       });
+//     });
+//   });
+// }
+
 function updateGallery(data) {
   const galleryContainer = document.querySelector(".gallery-grid");
-  const residentName = document
-    .getElementById("residentName")
-    .value.toLowerCase();
-  const unitNumber = document.getElementById("unitNumber").value;
-  const roomName = document.getElementById("room").value.toLowerCase();
-  const itemName = document.getElementById("item").value.toLowerCase();
-  const inspectionDate = document.getElementById("inspectionDate").value;
+  const residentNameInput = document.getElementById("residentName");
+  const unitNumberInput = document.getElementById("unitNumber").value;
+  const roomNameInput = document.getElementById("room");
+  const itemNameInput = document.getElementById("item");
+  const inspectionDateInput = document.getElementById("inspectionDate");
   const statePassed = document.getElementById("passed").checked;
   const stateFailed = document.getElementById("failed").checked;
   const stateNoPhoto = document.getElementById("noPhoto").checked;
@@ -42,81 +130,55 @@ function updateGallery(data) {
   galleryContainer.innerHTML = ""; // Clear existing content
 
   data.forEach((entry) => {
-    if (inspectionDate && entry.due_date !== inspectionDate) {
-      return;
+    let inspectionDateMatches = true;
+    if (inspectionDateInput.value) {
+      inspectionDateMatches = entry.due_date === inspectionDateInput.value;
     }
 
     entry.units.forEach((unit) => {
-      if (unitNumber && unit.unit_number !== unitNumber) {
-        return;
-      }
+      let unitMatches = !unitNumberInput.value || unit.unit_number === unitNumberInput.value;
+      let residentMatches = !residentNameInput.value || unit.residents.some(resident =>
+        resident.resident_name.toLowerCase().includes(residentNameInput.value.toLowerCase()));
 
-      const hasMatchingResident = unit.residents.some((resident) =>
-        resident.resident_name.toLowerCase().includes(residentName)
-      );
+      if (inspectionDateMatches && unitMatches && residentMatches) {
+        unit.rooms.forEach((room) => {
+          let roomMatches = !roomNameInput.value || room.room_name.toLowerCase() === roomNameInput.value.toLowerCase();
+          room.items.forEach((item) => {
+            let itemMatches = !itemNameInput.value || item.item_name.toLowerCase() === itemNameInput.value.toLowerCase();
+            item.aspects.forEach((aspect) => {
+              let statusMatches = (statePassed && aspect.status === 1) ||
+                                  (stateFailed && aspect.status === 2) ||
+                                  (stateNoPhoto && !aspect.image_url);
 
-      if (residentName && !hasMatchingResident) {
-        return;
-      }
+              if (roomMatches && itemMatches && statusMatches) {
+                const figure = document.createElement("figure");
+                figure.className = "gallery-item";
+                let statusSvg = aspect.status === 1 ? 'assets/pass.svg' :
+                                aspect.status === 2 ? 'assets/fail.svg' : 'assets/no-photo.svg';
 
-      unit.rooms.forEach((room) => {
-        if (roomName && room.room_name.toLowerCase() !== roomName) {
-          return;
-        }
-
-        room.items.forEach((item) => {
-          if (itemName && item.item_name.toLowerCase() !== itemName) {
-            return;
-          }
-
-          item.aspects.forEach((aspect) => {
-            let matchState = true;
-            if (statePassed && aspect.status !== 1) {
-              matchState = false;
-            }
-            if (stateFailed && aspect.status !== 0) {
-              matchState = false;
-            }
-            if (stateNoPhoto && aspect.image_url) {
-              matchState = false;
-            }
-
-            if (matchState) {
-              const figure = document.createElement("figure");
-              figure.className = "gallery-item";
-              let statusSvg = "";
-              if (aspect.status === 1) {
-                statusSvg = "assets/pass.svg";
-              } else if (aspect.status === 2) {
-                statusSvg = "assets/fail.svg";
-              } else {
-                statusSvg = "assets/no-photo.svg";
+                figure.innerHTML = `
+                  <figcaption>
+                    <p>Date: ${entry.due_date}</p>
+                    <p>Room: ${room.room_name}</p>
+                    <p>Item: ${item.item_name}</p>
+                  </figcaption>
+                  <img src="${aspect.image_url}" alt="${aspect.aspect_name}" />
+                  <div class="status">
+                    <img src="${statusSvg}" class="status-dot" alt="status" />
+                  </div>
+                     <button class="pass-button" onclick="overrideStatus(event, '${entry.due_date}', '${unit.unit_id}', '${room.room_name}', '${item.item_name}', '${aspect.aspect_name}', 1)">Pass</button>
+                     <button class="fail-button" onclick="overrideStatus(event, '${entry.due_date}', '${unit.unit_id}', '${room.room_name}', '${item.item_name}', '${aspect.aspect_name}', 2)">Fail</button>
+                `;
+                galleryContainer.appendChild(figure);
               }
-
-              figure.innerHTML = `
-
-
-  <figcaption>
-    <p>${entry.due_date}</p>
-    <p>${room.room_name}</p>
-    <p>${item.item_name}</p>
-  </figcaption>
-  <img src="${aspect.image_url}" alt="${aspect.aspect_name}" />
-  <div class="status">
-    <img src="${statusSvg}" class="status-dot" alt="status" />
-  </div>
-  <button class="pass-button" onclick="overrideStatus(event, '${entry.due_date}', '${unit.unit_id}', '${room.room_name}', '${item.item_name}', '${aspect.aspect_name}', 1)">Pass</button>
-  <button class="fail-button" onclick="overrideStatus(event, '${entry.due_date}', '${unit.unit_id}', '${room.room_name}', '${item.item_name}', '${aspect.aspect_name}', 2)">Fail</button>
-
-              `;
-              galleryContainer.appendChild(figure);
-            }
+            });
           });
         });
-      });
+      }
     });
   });
 }
+
 
 function overrideStatus(
   event,
@@ -127,22 +189,13 @@ function overrideStatus(
   aspectName,
   newStatus
 ) {
-  console.log(
-    "Overriding status:",
-    dueDate,
-    unitId,
-    roomName,
-    itemName,
-    aspectName,
-    newStatus
-  );
   event.preventDefault(); // to stop the form from submitting and reloading the page
   fetch("http://localhost:3000/api/overrideAspectStatus", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: 'include', // Ensures cookies are included in the request
+    credentials: "include", // Ensures cookies are included in the request
     body: JSON.stringify({
       dueDate,
       unitId,
@@ -152,14 +205,14 @@ function overrideStatus(
       newStatus,
     }),
   })
-  .then((response) => {
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    return response.text(); // You might use response.json() if the server sends JSON
-  })
-  .then(data => {
-    console.log('Success:', data);
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.text(); // You might use response.json() if the server sends JSON
+    })
+    .then((data) => {
+      console.log("Success:", data);
       fetch("http://localhost:3000/api/inspections", {
         credentials: "include", // Ensures cookies are included in the request
       })
@@ -179,14 +232,12 @@ function overrideStatus(
           console.error("Failed to fetch inspections:", error);
           alert("Failed to load inspections: " + error.message);
         });
-  })
-  .catch((error) => {
-    console.error("Failed to override status:", error);
-    alert("Failed to override status: " + error.message);
-  }
-  );
+    })
+    .catch((error) => {
+      console.error("Failed to override status:", error);
+      alert("Failed to override status: " + error.message);
+    });
 }
-
 
 document.addEventListener("DOMContentLoaded", () => {
   const filterInputs = document.querySelectorAll(

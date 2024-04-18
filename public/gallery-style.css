@@ -211,26 +211,19 @@ body, html {
   transform: translate(-50%, -50%);
   background: #d9d9d9;
   color: #fff;
-  padding: 5px;
   opacity: 0;
   transition: opacity;
   border-radius: 20px;
   width: 90%;
-  height: 70%;
+  height: 90%;
   text-align: center;
+  line-height: .8;
 }
 
 .gallery-item:hover figcaption {
   opacity: 1;
 }
 
-
-.pass-button {
-  position: absolute;
-  bottom: -40px; /* adjust as needed */
-  right: 25px; /* adjust as needed */
-  z-index: 10; /* ensures it is above other content */
-}
 .fail-button {
   width: 40%;
   position: absolute;
