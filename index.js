@@ -5,8 +5,10 @@ const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
 const DB = require("./database.js");
 const AI = require("./openai.js");
+const { peerProxy } = require('./peerProxy.js');
 const cors = require("cors");
 const app = express();
+
 
 // Port number can be set in the environment or default to 4000
 const PORT = process.env.PORT || 4000;
@@ -201,6 +203,8 @@ app.use("/api", apiRouter);
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
+peerProxy(httpService);
 
 function getHomeData(req, res, next) {
   fs.readFile("data/data.json", "utf8", (err, data) => {
