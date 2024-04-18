@@ -11,7 +11,7 @@ const app = express();
 
 
 // Port number can be set in the environment or default to 3000
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 // Serve static files from the 'public' directory
 app.use(express.static('public'));

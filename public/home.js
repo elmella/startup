@@ -1,4 +1,6 @@
-fetch("http://localhost:3000/api/inspections", {
+const PORT = 4000;
+
+fetch(`http://localhost:${PORT}/api/inspections`, {
   credentials: 'include'  // Ensures cookies are included in the request
 })
 .then(response => {
@@ -320,7 +322,7 @@ function analyzeInspectionData(dueDate) {
   // Show loading icon
   document.getElementById("loadingIcon").style.display = "flex";
 
-  fetch(`http://localhost:3000/api/analyze/${dueDate}`, {
+  fetch(`http://localhost:${PORT}/api/analyze/${dueDate}`, {
     credentials: 'include' // Ensures cookies, including authentication cookies, are sent with the request
   })
     .then((response) => {
@@ -346,7 +348,7 @@ function analyzeInspectionData(dueDate) {
 
 
 function getInspections() {
-  fetch("http://localhost:3000/api/inspections")
+  fetch(`http://localhost:${PORT}/api/inspections`)
     .then((response) => response.json())
     .then((data) => {
       // Store the data in LocalStorage
@@ -359,7 +361,7 @@ function getInspections() {
 
 
 function createSampleUnits() {
-  fetch("http://localhost:3000/api/sample-units", {
+  fetch(`http://localhost:${PORT}/api/sample-units`, {
     method: 'POST',  // POST method to create data
     headers: {
       'Content-Type': 'application/json',
@@ -389,7 +391,7 @@ function createInspectionForSampleUnits() {
     const dueDate = new Date().toISOString().slice(0, 10); // e.g., '2023-09-15'
     const userId = localStorage.getItem("userId"); // Ensure the user ID is stored in localStorage or obtained dynamically
 
-    fetch(`http://localhost:3000/api/inspections`, {
+    fetch(`http://localhost:${PORT}/api/inspections`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

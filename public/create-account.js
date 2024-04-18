@@ -1,3 +1,5 @@
+const PORT = 4000;
+
 function handleCreateAccount(event) {
     event.preventDefault();
 
@@ -15,7 +17,7 @@ function handleCreateAccount(event) {
         password: password
     };
 
-    fetch('/api/auth/create', {
+    fetch(`http://localhost:${PORT}/api/auth/create`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

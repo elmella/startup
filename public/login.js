@@ -1,3 +1,5 @@
+const PORT = 4000;
+
 function handleLogin(event) {
   event.preventDefault();  // Prevent the default form submission
 
@@ -11,7 +13,7 @@ function handleLogin(event) {
   };
 
   // Use fetch API to make a POST request to the login endpoint
-  fetch('/api/auth/login', {
+  fetch(`http://localhost:${PORT}/api/auth/login`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
