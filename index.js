@@ -118,7 +118,7 @@ app.get('/api/analyze', async (req, res) => {
       if (!inspectionId) {
           return res.status(400).json({ message: 'Inspection ID is required' });
       }
-      const result = await analyzeInspection(inspectionId);
+      const result = await DB.analyzeInspection(inspectionId);
       res.status(200).json({ success: result, message: 'Analysis completed successfully.' });
   } catch (error) {
       res.status(500).json({ success: false, message: error.message });
@@ -127,7 +127,6 @@ app.get('/api/analyze', async (req, res) => {
 
 app.get('/api/inspections', DB.fetchInspections);
 
-app.get('/api/analyze', )
 
 
 app.get('/api/units', DB.fetchUnits);

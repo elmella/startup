@@ -132,29 +132,32 @@ function overrideStatus(
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      dueDate, unitId, roomName, itemName, aspectName, newStatus,
+      dueDate,
+      unitId,
+      roomName,
+      itemName,
+      aspectName,
+      newStatus,
     }),
   })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.text(); // first get text to see what's there
-  })
-  .then(data => {
-    console.log('Success:', data);
-    fetch("http://localhost:3000/api/inspections")
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.text(); // first get text to see what's there
+    })
     .then((data) => {
-      updateGallery(data);
+      console.log("Success:", data);
+      fetch("http://localhost:3000/api/inspections")
+        .then((response) => response.json())
+        .then((data) => {
+          updateGallery(data);
+        });
+    })
+    .catch((error) => {
+      console.error("Error:", error);
     });
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
 }
-
-  
 
 document.addEventListener("DOMContentLoaded", () => {
   const filterInputs = document.querySelectorAll(

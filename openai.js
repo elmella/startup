@@ -89,6 +89,5 @@ function parseScores(inputString) {
 module.exports = {
     encodeImage,
     checkImage,
-    parseScores,
-    analyzeInspection
+    parseScores
 };

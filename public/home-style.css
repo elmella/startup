@@ -365,3 +365,11 @@ h6,
 .footer-link:hover {
   color: #61ef94;
 }
+
+.status {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 20px;
+  height: 20px;
+}

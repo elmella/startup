@@ -146,6 +146,15 @@ function updateGallery(data) {
           item.aspects.forEach((aspect) => {
             const figure = document.createElement("figure");
             figure.className = "gallery-item";
+
+            let statusSvg = "";
+              if (aspect.status === 1) {
+                statusSvg = "assets/pass.svg";
+              } else if (aspect.status === 2) {
+                statusSvg = "assets/fail.svg";
+              } else {
+                statusSvg = "assets/no-photo.svg";
+              }
             figure.innerHTML = `
                 <a href="gallery.html">
                   <img src="${aspect.image_url}" alt="${aspect.aspect_name}" />
@@ -155,6 +164,9 @@ function updateGallery(data) {
                   <p>${room.room_name}</p>
                   <p>${item.item_name}</p>
                 </figcaption>
+                <div class="status">
+                <img src="${statusSvg}" class="status-dot" alt="status" />
+              </div>
                 </a>
               `;
             galleryContainer.appendChild(figure);

@@ -248,9 +248,14 @@ async function analyzeInspection(inspectionId) {
                     if (aspect.image_url && !aspect.override) {
                         console.log(`Analyzing image for ${room.room_name} - ${item.item_name} - ${aspect.aspect_name}`);
                         try {
-                            const result = await AI.checkImage(aspect.image_url);
-                            const scores = AI.parseScores(result);
+                            // if the url is empty, skip the analysis
+                            if (aspect.image_url !== "") {
+                                const result = await AI.checkImage(aspect.image_url);
+                                const scores = AI.parseScores(result);
                             aspect.status = scores.cleanliness; // Update status based on analysis
+                            } else {
+                                aspect.status = 0;
+                            }
                             console.log(`Updated status for ${aspect.aspect_name}: ${aspect.status}`);
                         } catch (error) {
                             console.error(`Error analyzing image for ${aspect.aspect_name}: ${error.message}`);
