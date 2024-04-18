@@ -1,4 +1,4 @@
-const PORT = 4000;
+const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://api.startup.cs260party.click' : 'http://localhost:4000';
 
 function handleLogin(event) {
   event.preventDefault();  // Prevent the default form submission
@@ -13,7 +13,7 @@ function handleLogin(event) {
   };
 
   // Use fetch API to make a POST request to the login endpoint
-  fetch(`http://localhost:${PORT}/api/auth/login`, {
+  fetch(`${API_BASE_URL}/api/auth/login`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'

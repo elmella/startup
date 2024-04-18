@@ -1,6 +1,7 @@
-const PORT = 4000;
+const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://api.startup.cs260party.click' : 'http://localhost:4000';
 
-fetch(`http://localhost:${PORT}/api/inspections`, {
+
+fetch(`${API_BASE_URL}/api/inspections`, {
   credentials: "include", // Ensures cookies are included in the request
 })
   .then((response) => {
@@ -102,7 +103,7 @@ function overrideStatus(
   newStatus
 ) {
   event.preventDefault(); // to stop the form from submitting and reloading the page
-  fetch(`http://localhost:${PORT}/api/overrideAspectStatus`, {
+  fetch(`${API_BASE_URL}/api/overrideAspectStatus`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -125,7 +126,7 @@ function overrideStatus(
     })
     .then((data) => {
       console.log("Success:", data);
-      fetch(`http://localhost:${PORT}/api/inspections`, {
+      fetch(`${API_BASE_URL}/api/inspections`, {
         credentials: "include", // Ensures cookies are included in the request
       })
         .then((response) => {
@@ -157,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
   );
   filterInputs.forEach((input) => {
     input.addEventListener("change", () => {
-      fetch(`http://localhost:${PORT}/api/inspections`, {
+      fetch(`${API_BASE_URL}/api/inspections`, {
         credentials: "include", // Ensures cookies are included in the request
       })
         .then((response) => {

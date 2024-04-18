@@ -1,4 +1,5 @@
-const PORT = 4000;
+const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://api.startup.cs260party.click' : 'http://localhost:4000';
+
 
 function handleCreateAccount(event) {
     event.preventDefault();
@@ -17,7 +18,7 @@ function handleCreateAccount(event) {
         password: password
     };
 
-    fetch(`http://localhost:${PORT}/api/auth/create`, {
+    fetch(`${API_BASE_URL}/api/auth/create`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
