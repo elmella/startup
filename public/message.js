@@ -1,3 +1,5 @@
+const API_BASE_URL = 'https://api.startup.cs260party.click';
+
 document.addEventListener("DOMContentLoaded", function () {
   const ws = new WebSocket("wss://example.com/chat");
   ws.onopen = function () {

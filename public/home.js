@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://api.startup.cs260party.click' : 'http://localhost:4000';
+const API_BASE_URL = 'https://api.startup.cs260party.click';
 
 
 fetch(`${API_BASE_URL}/api/inspections`, {

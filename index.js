@@ -13,9 +13,12 @@ const app = express();
 // Port number can be set in the environment or default to 4000
 const PORT = process.env.PORT || 4000;
 
-app.use(cors({
-  origin: 'https://startup.cs260party.click'
-}));
+const corsOptions = {
+  origin: '*',  // This allows all domains; change to your frontend domain in production
+  methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH']
+};
+
+app.use(cors(corsOptions));
 
 
 // Serve static files from the 'public' directory
