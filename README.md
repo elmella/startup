@@ -111,9 +111,39 @@ For this deliverable, I have:
 
 <img src="public/media/html-gallery.png" width="450">
 
+
 #### Gallery view and filter HTML
 
 <img src="public/media/html-message.png" width="450">
 
 #### Messages screen HTML
 
+
+## JavaScript Deliverable
+
+- Login and create user functionality
+- Display the inspections, gallery, and analytics from sample json
+- Add and submit chats, save them in memory
+- Filter photos in the gallery
+- Function to do ai cleaning checks
+
+
+## Service deliverable
+- Set up express app with index.js
+- Static middleware for creating and serving up inspections, residents, units, and chats
+- Service functions for creating and storing objects in the database
+- Implement api for cleaning checks
+- Frontend calls using the fetch function
+
+## DB/Login
+- Created MongoDB Atlas
+- Storesd all of the the data in 5 different collections on MongoDB
+- Create users, login, authenticate
+- All data is associated with a user id and require authentication through cookies
+
+
+## WebSocket
+- Backend listens for connection through peerProxy.js
+- Frotend makes the connection with WebSocket
+- Messages are sent using the WebSocket
+- Messages sent to residents is displayed (Note, the residents message back the property manager on their own app, which I am also working on!)

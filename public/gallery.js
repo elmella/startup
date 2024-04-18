@@ -28,7 +28,7 @@ if (username) {
 function updateGallery(data) {
   const galleryContainer = document.querySelector(".gallery-grid");
   const residentNameInput = document.getElementById("residentName");
-  const unitNumberInput = document.getElementById("unitNumber").value;
+  const unitNumberInput = document.getElementById("unitNumber");
   const roomNameInput = document.getElementById("room");
   const itemNameInput = document.getElementById("item");
   const inspectionDateInput = document.getElementById("inspectionDate");
@@ -46,7 +46,8 @@ function updateGallery(data) {
 
     entry.units.forEach((unit) => {
       let unitMatches =
-        !unitNumberInput.value || unit.unit_number === unitNumberInput.value;
+        !unitNumberInput.value ||
+        unit.unit_number === unitNumberInput.value;
       let residentMatches =
         !residentNameInput.value ||
         unit.residents.some((resident) =>

@@ -1,27 +1,25 @@
-const API_BASE_URL = 'https://api.startup.cs260party.click';
-
+const API_BASE_URL = "https://api.startup.cs260party.click";
 
 fetch(`${API_BASE_URL}/api/inspections`, {
-  credentials: 'include'  // Ensures cookies are included in the request
+  credentials: "include", // Ensures cookies are included in the request
 })
-.then(response => {
-  if (!response.ok) {
-    throw new Error(`HTTP error! Status: ${response.status}`);
-  }
-  return response.json();
-})
-.then(data => {
-  // Store the data in LocalStorage
-  localStorage.setItem("myData", JSON.stringify(data));
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then((data) => {
+    // Store the data in LocalStorage
+    localStorage.setItem("myData", JSON.stringify(data));
 
-  updateGallery(data);
-  updateAnalytics(data);
-})
-.catch(error => {
-  console.error('Failed to fetch inspections:', error);
-  alert("Failed to load inspections: " + error.message);
-});
-
+    updateGallery(data);
+    updateAnalytics(data);
+  })
+  .catch((error) => {
+    console.error("Failed to fetch inspections:", error);
+    alert("Failed to load inspections: " + error.message);
+  });
 
 // Get the username from LocalStorage
 const username = localStorage.getItem("username");
@@ -113,10 +111,9 @@ function generateDynamicSVG(numberPassed, numberFailed, numberRemaining) {
 function updateGallery(data) {
   const galleryContainer = document.querySelector(".gallery-grid");
   const inspectionContainer = document.querySelector(".inspection-section");
-  
+
   galleryContainer.innerHTML = ""; // Clear existing content
 
-  let totalPassed = 0, totalFailed = 0, totalRemaining = 0;
   // Check if data is an array and has content
   if (!data || !Array.isArray(data)) {
     console.error("Data is undefined or not an array");
@@ -132,7 +129,9 @@ function updateGallery(data) {
       console.error("Units are undefined or not an array in", entry);
       return;
     }
-
+    let totalPassed = 0,
+      totalFailed = 0,
+      totalRemaining = 0;
     // Iterate over each unit
     entry.units.forEach((unit) => {
       // Ensure rooms exist and are an array
@@ -196,38 +195,12 @@ function updateGallery(data) {
           });
         });
       });
-
-      localStorage.setItem("totalPassed", totalPassed);
-      localStorage.setItem("totalFailed", totalFailed);
-      localStorage.setItem("totalRemaining", totalRemaining);
     });
-  });
 
-  updateInspections(data);
-}
-
-function updateInspections(data) {
-  const totalPassed = parseInt(localStorage.getItem("totalPassed"), 10);
-  const totalFailed = parseInt(localStorage.getItem("totalFailed"), 10);
-  const totalRemaining = parseInt(localStorage.getItem("totalRemaining"), 10);
-
-  const inspectionContainer = document.querySelector(".inspection-section");
-  inspectionContainer.innerHTML = ""; // Clear existing content
-
-  // Assuming `totalPassed`, `totalFailed`, and `totalRemaining` are correctly calculated
-  // Check if data is an array and has content
-  if (!data || !Array.isArray(data)) {
-    console.error("Data is undefined or not an array");
-    return;
-  }
-
-  // Iterate over each entry in the data array
-  const due_date = data.due_date;
-
-  const svg = generateDynamicSVG(totalPassed, totalFailed, totalRemaining);
-      const div = document.createElement("div");
-      div.className = "row-container";
-      div.innerHTML = `
+    const svg = generateDynamicSVG(totalPassed, totalFailed, totalRemaining);
+    const div = document.createElement("div");
+    div.className = "row-container";
+    div.innerHTML = `
       <div class="inspection-meta">
         <div class="inspection-date">${entry.due_date}</div>
         <div class="inspection-progress">${svg}</div>
@@ -239,9 +212,9 @@ function updateInspections(data) {
         <img src="assets/download.svg" alt="Download CSV" />
       </div>
     `;
-      inspectionContainer.appendChild(div);
+    inspectionContainer.appendChild(div);
+  });
 }
-
 
 function downloadCSV(date) {
   const data = JSON.parse(localStorage.getItem("myData"));
@@ -292,20 +265,26 @@ function updateAnalytics(data) {
 
   console.log("Data received for analytics:", data);
 
-  if (!data || !Array.isArray(data)) {
-    console.error("Data is undefined or not an array");
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    console.error("Data is undefined, not an array, or empty");
     return;
   }
 
-  data.forEach((entry) => {
-    entry.units.forEach((unit) => {
-      unit.rooms.forEach((room) => {
-        room.items.forEach((item) => {
-          item.aspects.forEach((aspect) => {
-            totalAspects++;
-            if (aspect.status === 1) passed++;
-            if (aspect.status === 2) failed++;
-          });
+  // Sort the data by due date in descending order
+  data.sort((a, b) => new Date(b.dueDate) - new Date(a.dueDate));
+
+  // Get the inspection with the latest due date
+  const recentInspection = data[0];
+
+  console.log("Latest due date:", recentInspection.dueDate);
+
+  recentInspection.units.forEach((unit) => {
+    unit.rooms.forEach((room) => {
+      room.items.forEach((item) => {
+        item.aspects.forEach((aspect) => {
+          totalAspects++;
+          if (aspect.status === 1) passed++;
+          if (aspect.status === 2) failed++;
         });
       });
     });
@@ -325,7 +304,11 @@ function updateAnalytics(data) {
   );
 
   // Update the SVG with the new percentages
-  const analyticsSVG = generateDynamicSVG(passed, failed, totalAspects - passed - failed);
+  const analyticsSVG = generateDynamicSVG(
+    passed,
+    failed,
+    totalAspects - passed - failed
+  );
   const analyticsContent = document.querySelector(".analytics-content");
 
   // Clear existing content
@@ -341,13 +324,12 @@ function updateAnalytics(data) {
     </div>`;
 }
 
-
 function analyzeInspectionData(dueDate) {
   // Show loading icon
   document.getElementById("loadingIcon").style.display = "flex";
 
   fetch(`${API_BASE_URL}/api/analyze/${dueDate}`, {
-    credentials: 'include' // Ensures cookies, including authentication cookies, are sent with the request
+    credentials: "include", // Ensures cookies, including authentication cookies, are sent with the request
   })
     .then((response) => {
       if (!response.ok) {
@@ -370,7 +352,6 @@ function analyzeInspectionData(dueDate) {
     });
 }
 
-
 function getInspections() {
   fetch(`${API_BASE_URL}/api/inspections`)
     .then((response) => response.json())
@@ -383,73 +364,78 @@ function getInspections() {
     });
 }
 
-
 function createSampleUnits() {
   fetch(`${API_BASE_URL}/api/sample-units`, {
-    method: 'POST',  // POST method to create data
+    method: "POST", // POST method to create data
     headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
+      "Content-Type": "application/json",
+      Accept: "application/json",
     },
-    credentials: 'include'  // Ensure cookies are sent with the request for authentication
+    credentials: "include", // Ensure cookies are sent with the request for authentication
   })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    return response.json();
-  })
-  .then(data => {
-    console.log('Sample units created:', data);
-    // Additional actions based on successful creation
-  })
-  .catch(error => {
-    console.error('Failed to create sample units:', error);
-  });
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Sample units created:", data);
+      // Additional actions based on successful creation
+    })
+    .catch((error) => {
+      console.error("Failed to create sample units:", error);
+    });
 }
 
-document.getElementById('createInspectionButton').addEventListener('click', createInspectionForSampleUnits);
+document
+  .getElementById("createInspectionButton")
+  .addEventListener("click", createInspectionForSampleUnits);
 
 function createInspectionForSampleUnits() {
   // Query the user for a due date
-  const dueDate = prompt("Please enter a due date for the inspection (YYYY-MM-DD):");
+  const dueDate = prompt(
+    "Please enter a due date for the inspection (YYYY-MM-DD):"
+  );
 
   // Validate the due date
   if (!dueDate || !/^(\d{4})-(\d{2})-(\d{2})$/.test(dueDate)) {
-      alert("Invalid due date. Please enter a date in the format YYYY-MM-DD.");
-      return;
+    alert("Invalid due date. Please enter a date in the format YYYY-MM-DD.");
+    return;
   }
 
   const userId = localStorage.getItem("userId"); // Ensure the user ID is stored in localStorage or obtained dynamically
 
   fetch(`${API_BASE_URL}/api/inspections`, {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-          dueDate: dueDate,
-          userId: userId // Send the user ID whose units you want to inspect
-      }),
-      credentials: 'include' // Include cookies for authentication if necessary
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      dueDate: dueDate,
+      userId: userId, // Send the user ID whose units you want to inspect
+    }),
+    credentials: "include", // Include cookies for authentication if necessary
   })
-  .then(response => {
+    .then((response) => {
       if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
       return response.json();
-  })
-  .then(data => {
-      console.log('Inspection created successfully:', data);
+    })
+    .then((data) => {
+      console.log("Inspection created successfully:", data);
       alert("Inspection created successfully!");
       // You might want to update the UI or fetch new data here
-  })
-  .catch(error => {
-      console.error('Failed to create inspection:', error);
+    })
+    .catch((error) => {
+      console.error("Failed to create inspection:", error);
       alert("Failed to create inspection: " + error.message);
-  });
+    });
 }
 
 // Example of calling createSampleUnits on button click or as needed
-document.getElementById('createSampleButton').addEventListener('click', createSampleUnits);
+document
+  .getElementById("createSampleButton")
+  .addEventListener("click", createSampleUnits);

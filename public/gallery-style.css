@@ -217,11 +217,12 @@ body, html {
   width: 90%;
   height: 90%;
   text-align: center;
-  line-height: .8;
+  line-height: 0.8;
+  z-index: 2;
 }
 
 .gallery-item:hover figcaption {
-  opacity: 1;
+    opacity: 1;
 }
 
 .fail-button {
