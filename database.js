@@ -476,8 +476,14 @@ async function loadSampleUnits(req, res) {
   }
 }
 
-async function generateSampleChatsForUser(userId) {
+async function generateSampleChatsForUser(req, res, next) {
+  if (!req.user) {
+      return res.status(401).send("Authentication required");
+  }
+
   try {
+      const userId = req.user._id;  // Directly use the authenticated user's ID from the request object
+
       // Find all residents associated with the user ID
       const residents = await Resident.find({ user_id: userId });
 
@@ -508,8 +514,12 @@ async function generateSampleChatsForUser(userId) {
           await chat.save();
           console.log(`Chat history created for resident ${resident.resident_name}`);
       }
-  } catch (error) {
-      console.error('Failed to generate chat histories:', error);
+      
+      res.status(200).send("Chat histories generated successfully");
+  }
+  catch (error) {
+      console.error("Failed to generate chat histories:", error);
+      res.status(500).json({ error: "Failed to generate chat histories", details: error.message });
   }
 }
 

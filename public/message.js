@@ -10,28 +10,30 @@ if (generateDataButton) {
 }
 
 function callGenerateData() {
+
+  // Fetch call to the generate-chats endpoint
   fetch(`${API_BASE_URL}/api/generate-chats`, {
-    method: 'POST',  // Specify the method
-    credentials: 'include',  // Ensures cookies are included in the request
-    headers: {
-        'Content-Type': 'application/json'  // Specify the content type
-    },
-    body: JSON.stringify({ userId: userId })  // Send the user ID from cookies
-})
-.then(response => {
-    if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    return response.json();
-})
-.then(data => {
-    console.log('Chat histories generated successfully:', data);
-    alert("Chat histories generated successfully!");
-})
-.catch(error => {
-    console.error('Failed to generate chat histories:', error);
-    alert("Failed to generate chat histories: " + error.message);
-});
+      method: 'POST',  // Use POST method
+      credentials: 'include',  // Include cookies for authentication
+      headers: {
+          'Content-Type': 'application/json'  // Ensure correct content type
+      }
+      // Note: No need to send a body with the user ID since it uses the authenticated session
+  })
+  .then(response => {
+      if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();  // Parse JSON data from the response
+  })
+  .then(data => {
+      console.log('Chat histories generated successfully:', data);
+      alert("Chat histories generated successfully!");
+  })
+  .catch(error => {
+      console.error('Failed to generate chat histories:', error);
+      alert("Failed to generate chat histories: " + error.message);
+  });
 }
 
 // Fetch initial message history from the server

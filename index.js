@@ -50,25 +50,8 @@ apiRouter.use(DB.verifyUser);
 
 apiRouter.post("/sample-units", DB.loadSampleUnits);
 
-apiRouter.post("/generate-chats", async (req, res) => {
-  if (!req.user) {
-      return res.status(401).send("Authentication required");
-  }
+apiRouter.post("/generate-chats", DB.generateSampleChatsForUser);
 
-  try {
-      // Assuming the userId to generate chats for is passed in the request body
-      const userId = req.body.userId;
-      if (!userId) {
-          return res.status(400).send("User ID is required");
-      }
-
-      await DB.generateSampleChatsForUser(userId);
-      res.status(200).send("Chat histories generated successfully for the user with ID: " + userId);
-  } catch (error) {
-      console.error("Failed to generate chat histories:", error);
-      res.status(500).json({ error: "Failed to generate chat histories", details: error.message });
-  }
-});
 
 app.post("/api/auth/create", async (req, res) => {
   try {
