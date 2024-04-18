@@ -105,7 +105,9 @@ function updateGallery(data) {
     console.error("Data is undefined or not an array");
     return;
   }
-
+  while (inspectionContainer.firstChild) {
+    inspectionContainer.removeChild(inspectionContainer.firstChild);
+  }
   // Iterate over each entry in the data array
   data.forEach((entry) => {
     // Ensure units exist and are an array
@@ -148,13 +150,13 @@ function updateGallery(data) {
             figure.className = "gallery-item";
 
             let statusSvg = "";
-              if (aspect.status === 1) {
-                statusSvg = "assets/pass.svg";
-              } else if (aspect.status === 2) {
-                statusSvg = "assets/fail.svg";
-              } else {
-                statusSvg = "assets/no-photo.svg";
-              }
+            if (aspect.status === 1) {
+              statusSvg = "assets/pass.svg";
+            } else if (aspect.status === 2) {
+              statusSvg = "assets/fail.svg";
+            } else {
+              statusSvg = "assets/no-photo.svg";
+            }
             figure.innerHTML = `
                 <a href="gallery.html">
                   <img src="${aspect.image_url}" alt="${aspect.aspect_name}" />
@@ -325,64 +327,62 @@ function updateAnalytics(data) {
     `Analytics - Passed: ${passedPercent}%, Failed: ${failedPercent}%, Not Done: ${notDonePercent}%`
   );
 
-  const barChartContainer = document.querySelector(".bar-chart-container");
-  const passedBar = barChartContainer
-    ? barChartContainer.querySelector(".passed")
-    : null;
-  const failedBar = barChartContainer
-    ? barChartContainer.querySelector(".failed")
-    : null;
-  const notDoneBar = barChartContainer
-    ? barChartContainer.querySelector(".not-done")
-    : null;
+  // Update the SVG with the new percentages
+  const analyticsSVG = generateDynamicSVG(passed, failed, totalAspects - passed - failed);
+  const analyticsContent = document.querySelector(".analytics-content");
 
-  if (passedBar) {
-    passedBar.style.flexBasis = `${passedPercent}%`;
-    passedBar.textContent = `${passedPercent}% Passed`;
-  } else {
-    console.error("Passed bar not found");
-  }
-
-  if (failedBar) {
-    failedBar.style.flexBasis = `${failedPercent}%`;
-    failedBar.textContent = `${failedPercent}% Failed`;
-  } else {
-    console.error("Failed bar not found");
-  }
-
-  if (notDoneBar) {
-    notDoneBar.style.flexBasis = `${notDonePercent}%`;
-    notDoneBar.textContent = `${notDonePercent}% Not Done`;
-  } else {
-    console.error("Not Done bar not found");
-  }
+  // Clear existing content
+  analyticsContent.innerHTML = `
+    <div class="analytics-svg-container">
+  <h2>Current Inspection</h2>
+      ${analyticsSVG}
+      <div class="analytics-text">
+        <p>${passedPercent}% Passed</p>
+        <p>${failedPercent}% Failed</p>
+        <p>${notDonePercent}% Not Done</p>
+      </div>
+    </div>`;
 }
+
 
 function analyzeInspectionData(dueDate) {
   // Show loading icon
-  document.getElementById('loadingIcon').style.display = 'flex';
+  document.getElementById("loadingIcon").style.display = "flex";
 
   fetch(`http://localhost:3000/api/analyze/${dueDate}`)
-      .then(response => {
-          if (!response.ok) {
-              throw new Error('Network response was not ok');
-          }
-          return response.json();
-      })
-      .then(data => {
-          console.log('Analysis completed successfully:', data);
-          alert('Inspection analysis completed successfully.');
-      })
-      .catch(error => {
-          console.error('Error during inspection analysis:', error);
-          alert('Failed to perform analysis: ' + error.message);
-      })
-      .finally(() => {
-          // Hide loading icon
-          document.getElementById('loadingIcon').style.display = 'none';
-      });
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Analysis completed successfully:", data);
+      // Update the gallery and analytics with the new data
+      getInspections();
+    })
+    .catch((error) => {
+      console.error("Error during inspection analysis:", error);
+      alert("Failed to perform analysis: " + error.message);
+    })
+    .finally(() => {
+      // Hide loading icon
+      document.getElementById("loadingIcon").style.display = "none";
+
+    });
 }
 
+function getInspections() {
+  fetch("http://localhost:3000/api/inspections")
+    .then((response) => response.json())
+    .then((data) => {
+      // Store the data in LocalStorage
+      localStorage.setItem("myData", JSON.stringify(data));
+
+      updateGallery(data);
+      updateAnalytics(data);
+    });
+}
 
 // document.getElementById("backButton").addEventListener("click", () => {
 //   const photoContainer = document.getElementById("photoContainer");

@@ -1,40 +1,42 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="globals.css" />
-    <link rel="stylesheet" href="styleguide.css" />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="login">
-      <div class="logo-w-background">
-        <div class="logo-wrapper"><img class="logo" src="assets/logo.svg" /></div>
-        <div class="text-wrapper">checkt.ai</div>
-      </div>
-      <div class="frame">
-        <div class="div">Create your account:</div>
-        <div class="frame-wrapper">
-          <div class="frame-2">
-            <div class="frame-3">
-              <div class="div-wrapper"><div class="text-wrapper-2">Email</div></div>
-              <div class="frame-4"><div class="text-wrapper-3">Example@residential.com</div></div>
-            </div>
-            <div class="frame-3">
-              <div class="div-wrapper"><div class="text-wrapper-2">Password</div></div>
-              <div class="frame-5"><div class="text-wrapper-3">YourPassword16!8</div></div>
-            </div>
-            <div class="frame-3">
-              <div class="div-wrapper"><div class="text-wrapper-2">Confirm Password</div></div>
-              <div class="frame-5"><div class="text-wrapper-3">YourPassword16!8</div></div>
-            </div>
-            <div class="frame-6">
-              <div class="frame-7"><a href="home.html" class="text-wrapper-4">Create Account</a></div>
-            </div>
-          </div>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+    <link rel="stylesheet" href="login-style.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="branding">
+            <img class="logo" src="assets/logo.svg" alt="Checkt.ai Logo">
+            <h1 class="branding-title">checkt.ai</h1>
         </div>
-        <div class="text-wrapper-5">Already have an account? Login</div>
-      </div>
+        <div class="login-box">
+            <h2 class="login-title">Create your account:</h2>
+            <form class="login-form" onsubmit="handleCreateAccount(event)">
+                <div class="form-group">
+                    <label for="emailInput" class="form-label">Email</label>
+                    <input type="email" id="emailInput" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="passwordInput" class="form-label">Password</label>
+                    <input type="password" id="passwordInput" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPasswordInput" class="form-label">Confirm Password</label>
+                    <input type="password" id="confirmPasswordInput" class="form-input" required>
+                </div>
+                <button type="submit" class="login-button">Create Account</button>
+            </form>
+            <a href="index.html" class="create-account-link">Already have an account? Log in</a>
+        </div>
     </div>
-  </body>
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-text">© 2024 Checkt.ai. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="create-account.js"></script>
+</body>
 </html>

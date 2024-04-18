@@ -30,39 +30,30 @@ var apiRouter = express.Router();
 app.use(`/api`, apiRouter);
 
 // CreateAuth token for a new user
-apiRouter.post('/auth/create', async (req, res) => {
-    if (await DB.getUser(req.body.username)) {
-      res.status(409).send({ msg: 'Existing user' });
-    } else {
-      const user = await DB.createUser(req.body.username, req.body.password);
-  
-      // Set the cookie
-      setAuthCookie(res, user.token);
-  
-      res.send({
-        id: user._id,
-      });
-    }
-  });
-  
-  // GetAuth token for the provided credentials
-  apiRouter.post('/auth/login', async (req, res) => {
-    const user = await DB.getUser(req.body.username);
-    if (user) {
-      if (await bcrypt.compare(req.body.password, user.password)) {
-        setAuthCookie(res, user.token);
-        res.send({ id: user._id });
-        return;
-      }
-    }
-    res.status(401).send({ msg: 'Unauthorized' });
-  });
+app.post('/api/auth/create', async (req, res) => {
+  try {
+    const user = await DB.createUser(req.body.email, req.body.password);
+    res.cookie('authToken', user.token, { httpOnly: true, secure: true, sameSite: 'Strict' });
+    res.status(201).send({ id: user._id, msg: 'User created and logged in' });
+  } catch (error) {
+    res.status(409).send({ msg: error.message });
+  }
+});
 
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const user = await DB.authenticateUser(req.body.email, req.body.password);
+    res.cookie('authToken', user.token, { httpOnly: true, secure: true, sameSite: 'Strict' });
+    res.send({ id: user._id });
+  } catch (error) {
+    res.status(401).send({ msg: error.message });
+  }
+});
 
-  apiRouter.delete('/auth/logout', (_req, res) => {
-    res.clearCookie(authCookieName);
-    res.status(204).end();
-  });
+app.delete('/api/auth/logout', (req, res) => {
+  res.clearCookie('authToken');
+  res.sendStatus(204);
+});
 
   apiRouter.post('/units', async (req, res) => {
     try {
@@ -176,174 +167,3 @@ function getMessageData(req, res, next) {
         }
     });
 }
-
-// const testData = {
-//   unit_number: "101",
-//   unit_id: "12345",
-//   rooms: [
-//       {
-//           room_name: "Kitchen",
-//           items: [
-//               {
-//                   item_name: "Fridge",
-//                   aspects: [
-//                       {
-//                           aspect_name: "Fridge Outside",
-//                       },
-//                       {
-//                           aspect_name: "Fridge Inside",
-//                       }
-//                   ]
-//               },
-//               {
-//                   item_name: "Oven",
-//                   aspects: [
-//                       {
-//                           aspect_name: "Oven Outside",
-//                       },
-//                       {
-//                           aspect_name: "Oven Inside",
-//                       }
-//                   ]
-//               }
-//           ]
-//       },
-//       {
-//           room_name: "Living Room",
-//           items: [
-//               {
-//                   item_name: "Sofa",
-//                   aspects: [
-//                       {
-//                           aspect_name: "Sofa Cushions",
-//                       },
-//                       {
-//                           aspect_name: "Sofa Frame",
-//                       }
-//                   ]
-//               }
-//           ]
-//       }
-//   ],
-//   residents: [
-//       {
-//           resident_name: "John Doe",
-//           resident_id: "123456",
-//           resident_email: "johndoe@example.com"
-//       },
-//       {
-//           resident_name: "Jane Doe",
-//           resident_id: "654321",
-//           resident_email: "janedoe@example.com"
-//       }
-//   ]
-// };
-// const testData2 = {
-//   unit_number: "202",
-//   unit_id: "54321",
-//   rooms: [
-//       {
-//           room_name: "Kitchen",
-//           items: [
-//               {
-//                   item_name: "Fridge",
-//                   aspects: [
-//                       {
-//                           aspect_name: "Fridge Outside",
-//                       },
-//                       {
-//                           aspect_name: "Fridge Inside",
-//                       }
-//                   ]
-//               },
-//               {
-//                   item_name: "Oven",
-//                   aspects: [
-//                       {
-//                           aspect_name: "Oven Outside",
-//                       },
-//                       {
-//                           aspect_name: "Oven Inside",
-//                       }
-//                   ]
-//               }
-//           ]
-//       },
-//       {
-//           room_name: "Living Room",
-//           items: [
-//               {
-//                   item_name: "Sofa",
-//                   aspects: [
-//                       {
-//                           aspect_name: "Sofa Cushions",
-//                       },
-//                       {
-//                           aspect_name: "Sofa Frame",
-//                       }
-//                   ]
-//               }
-//           ]
-//       }
-//   ],
-//   residents: [
-//       {
-//           resident_name: "Juan Doe",
-//           resident_id: "111111",
-//           resident_email: "juandoe@example.com"
-//       },
-//       {
-//           resident_name: "Juana Doe",
-//           resident_id: "222222",
-//           resident_email: "juanadoe@example.com"
-//       }
-//   ]
-// };
-const testDataResident = {
-  resident_name: "John Doe",
-  resident_id: "123456",
-  resident_email: "johndoe@gmail.com",
-  unit_id: "12345"
-};
-
-const testDataResident2 = {
-  resident_name: "Jane Doe",
-  resident_id: "654321",
-  resident_email: "janedoe@example.com",
-  unit_id: "12345"
-};
-
-const testDataResident3 = {
-          resident_name: "Juan Doe",
-          resident_id: "111111",
-          resident_email: "juandoe@example.com",
-          unit_id: "54321"
-};
-
-const testDataResident4 = {
-          resident_name: "Juana Doe",
-          resident_id: "222222",
-          resident_email: "juanadoe@example.com",
-          unit_id: "54321"
-};
-
-
-// // Function call to add the test data
-// (async () => {
-//   try {
-//     await addUnit(testData2);
-//   } catch (error) {
-//     console.error('Error:', error);
-//   }
-// })();
-
-// (async () => {
-//   try {
-//     await DB.addResident(testDataResident);
-//     await DB.addResident(testDataResident2);
-//     await DB.addResident(testDataResident3);
-//     await DB.addResident(testDataResident4);
-//   } catch (error) {
-//     console.error('Error:', error);
-//   }
-// })();

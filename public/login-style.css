@@ -79,7 +79,7 @@
 
 .create-account-link {
   display: block;
-  color: #ffffff;
+  color: #333; /* Changed from #ffffff to #333 to provide contrast against the white background */
   text-align: center;
   margin-top: 1rem;
   text-decoration: none;

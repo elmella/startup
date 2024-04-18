@@ -5,7 +5,7 @@ const config = require("./dbConfig.json");
 const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
 const uuid = require("uuid");
 const bcrypt = require("bcrypt");
-const AI = require('./openai.js');
+const AI = require("./openai.js");
 
 const client = new MongoClient(url, { useUnifiedTopology: true });
 const db = "test";
@@ -24,7 +24,7 @@ const db = "test";
 
 // Connect to MongoDB
 mongoose
-  .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(url)
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
 
@@ -99,8 +99,9 @@ const residentSchema = new mongoose.Schema({
 });
 
 const userSchema = new mongoose.Schema({
-  username: String,
+  email: String,
   password: String,
+  token: String,
 });
 
 const messageSchema = new Schema({
@@ -196,79 +197,91 @@ async function fetchInspections(req, res, next) {
   }
 }
 
-async function overrideAspectStatus(dueDate, unitId, roomName, itemName, aspectName, newStatus) {
-
-    try {
-      const result = await Inspection.updateOne(
-        {
-          due_date: dueDate,
-          "units.unit_id": unitId,
-          "units.rooms.room_name": roomName,
-          "units.rooms.items.item_name": itemName,
-          "units.rooms.items.aspects.aspect_name": aspectName
+async function overrideAspectStatus(
+  dueDate,
+  unitId,
+  roomName,
+  itemName,
+  aspectName,
+  newStatus
+) {
+  try {
+    const result = await Inspection.updateOne(
+      {
+        due_date: dueDate,
+        "units.unit_id": unitId,
+        "units.rooms.room_name": roomName,
+        "units.rooms.items.item_name": itemName,
+        "units.rooms.items.aspects.aspect_name": aspectName,
+      },
+      {
+        $set: {
+          "units.$[unit].rooms.$[room].items.$[item].aspects.$[aspect].status":
+            newStatus,
+          "units.$[unit].rooms.$[room].items.$[item].aspects.$[aspect].override": true,
         },
-        {
-          $set: {
-            "units.$[unit].rooms.$[room].items.$[item].aspects.$[aspect].status": newStatus,
-            "units.$[unit].rooms.$[room].items.$[item].aspects.$[aspect].override": true
-          }
-        },
-        {
-          arrayFilters: [
-            { "unit.unit_id": unitId },
-            { "room.room_name": roomName },
-            { "item.item_name": itemName },
-            { "aspect.aspect_name": aspectName }
-          ]
-        }
-      );
-  
-      console.log("Aspect status overridden:", result);
-      if (result.nModified === 0) {
-        console.log("No records updated. Please check your query criteria.");
-      } else {
-        console.log("Aspect status updated successfully.");
+      },
+      {
+        arrayFilters: [
+          { "unit.unit_id": unitId },
+          { "room.room_name": roomName },
+          { "item.item_name": itemName },
+          { "aspect.aspect_name": aspectName },
+        ],
       }
-    } catch (error) {
-      console.error("Error overriding aspect status:", error);
+    );
+
+    console.log("Aspect status overridden:", result);
+    if (result.nModified === 0) {
+      console.log("No records updated. Please check your query criteria.");
+    } else {
+      console.log("Aspect status updated successfully.");
+    }
+  } catch (error) {
+    console.error("Error overriding aspect status:", error);
+  }
+}
+
+async function analyzeInspection(dueDate) {
+  console.log(`Analyzing inspection for due date: ${dueDate}`);
+  // Fetch the inspection from the database
+  let inspection = await Inspection.findOne({ due_date: dueDate });
+  if (!inspection) {
+    throw new Error("Inspection not found");
+  }
+
+  for (let unit of inspection.units) {
+    for (let room of unit.rooms) {
+      for (let item of room.items) {
+        for (let aspect of item.aspects) {
+          console.log(
+            `Analyzing image for ${room.room_name} - ${item.item_name} - ${aspect.aspect_name}`
+          );
+          try {
+            // if the url is empty, skip the analysis
+            if (aspect.image_url !== "") {
+              const result = await AI.checkImage(aspect.image_url);
+              console.log(`Result for ${aspect.aspect_name}: ${result}`);
+              const scores = AI.parseScores(result);
+              aspect.status = scores.cleanliness; // Update status based on analysis
+            } else {
+              aspect.status = 0;
+            }
+            console.log(
+              `Updated status for ${aspect.aspect_name}: ${aspect.status}`
+            );
+          } catch (error) {
+            console.error(
+              `Error analyzing image for ${aspect.aspect_name}: ${error.message}`
+            );
+          }
+        }
+      }
     }
   }
-  
-async function analyzeInspection(dueDate) {
 
-    console.log(`Analyzing inspection for due date: ${dueDate}`);
-    // Fetch the inspection from the database
-    let inspection = await Inspection.findOne({ due_date: dueDate });
-    if (!inspection) {
-        throw new Error('Inspection not found');
-    }
-
-    for (let unit of inspection.units) {
-        for (let room of unit.rooms) {
-            for (let item of room.items) {
-                for (let aspect of item.aspects) {
-                        console.log(`Analyzing image for ${room.room_name} - ${item.item_name} - ${aspect.aspect_name}`);
-                        try {
-                            // if the url is empty, skip the analysis
-                            if (aspect.image_url !== "") {
-                                const result = await AI.checkImage(aspect.image_url);
-                                console.log(`Result for ${aspect.aspect_name}: ${result}`);
-                                const scores = AI.parseScores(result);
-                            aspect.status = scores.cleanliness; // Update status based on analysis
-                            } else {
-                                aspect.status = 0;
-                            }
-                            console.log(`Updated status for ${aspect.aspect_name}: ${aspect.status}`);
-                        } catch (error) {
-                            console.error(`Error analyzing image for ${aspect.aspect_name}: ${error.message}`);
-                        }
-                }
-            }
-        }
-    }
-
-    await inspection.save(); // Save the updated inspection back to the database
-    return true; // Return true to indicate success
+  await inspection.save(); // Save the updated inspection back to the database
+  return true; // Return true to indicate success
 }
 
 async function fetchUnits(req, res, next) {
@@ -295,28 +308,39 @@ async function fetchResidents(req, res, next) {
 }
 
 async function createUser(email, password) {
-  // Hash the password before we insert it into the database
-  const passwordHash = await bcrypt.hash(password, 10);
-
-  const user = new User({
+  let user = await User.findOne({ email });
+  if (user) {
+    throw new Error("User already exists");
+  }
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const token = uuid.v4();
+  user = new User({
     email,
-    password: passwordHash,
-    token: uuid.v4(),
+    password: hashedPassword,
+    token,
   });
-
   await user.save();
+  return user;
 }
 
-
-async function getUser(email) {
-  return User.findOne({ email });
+async function authenticateUser(email, password) {
+  const user = await User.findOne({ email });
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    throw new Error("Authentication failed");
+  }
+  return user;
 }
+
+// async function getUser(email) {
+//   return User.findOne({ email });
+// }
 
 function setAuthCookie(res, authToken) {
-  res.cookie("token", authToken, {
-    secure: true,
-    httpOnly: true,
-    sameSite: "strict",
+  const authCookieName = "authToken"; // Name of the cookie for authentication token
+  res.cookie(authCookieName, authToken, {
+    httpOnly: true, // The cookie is not accessible via client-side script
+    secure: process.env.NODE_ENV === "production", // Use 'secure' flag in production
+    sameSite: "strict", // The cookie will not be sent along with requests initiated by third party websites
   });
 }
 
@@ -367,9 +391,9 @@ module.exports = {
   fetchUnits,
   fetchResidents,
   createUser,
-  getUser,
   setAuthCookie,
   createSampleData,
   overrideAspectStatus,
-    analyzeInspection
+  analyzeInspection,
+    authenticateUser
 };
