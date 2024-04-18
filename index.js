@@ -25,12 +25,17 @@ app.use(cors({
         }
         return callback(null, true);
     },
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    
 }));
+
 
 
 // Serve static files from the 'public' directory
 app.use(express.static('public'));
+
 
 
 // Parse JSON bodies
