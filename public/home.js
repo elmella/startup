@@ -359,6 +359,9 @@ function updateAnalytics(data) {
 }
 
 function analyzeInspectionData(dueDate) {
+  // Show loading icon
+  document.getElementById('loadingIcon').style.display = 'flex';
+
   fetch(`http://localhost:3000/api/analyze/${dueDate}`)
       .then(response => {
           if (!response.ok) {
@@ -373,6 +376,10 @@ function analyzeInspectionData(dueDate) {
       .catch(error => {
           console.error('Error during inspection analysis:', error);
           alert('Failed to perform analysis: ' + error.message);
+      })
+      .finally(() => {
+          // Hide loading icon
+          document.getElementById('loadingIcon').style.display = 'none';
       });
 }
 

@@ -81,7 +81,8 @@ async function checkImage(imageUrl) {
 }
 
 function parseScores(inputString) {
-    const cleanlinessScore = inputString.match(/True/) ? 1 : 2;
+    // check if the input string contains the word "True"
+    const cleanlinessScore = inputString.includes("True") ? 1 : 2;
     return {
         cleanliness: cleanlinessScore
     };
