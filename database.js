@@ -184,7 +184,7 @@ async function createInspection(dueDate) {
 async function fetchInspections(req, res, next) {
   try {
     const inspections = await Inspection.find({});
-    console.log("Inspections fetched successfully:", inspections);
+    // console.log("Inspections fetched successfully:", inspections);
 
     // Send the inspections back in the response
     res.json(inspections);
@@ -234,9 +234,11 @@ async function overrideAspectStatus(dueDate, unitId, roomName, itemName, aspectN
     }
   }
   
-async function analyzeInspection(inspectionId) {
+async function analyzeInspection(dueDate) {
+
+    console.log(`Analyzing inspection for due date: ${dueDate}`);
     // Fetch the inspection from the database
-    let inspection = await Inspection.findById(inspectionId);
+    let inspection = await Inspection.findOne({ due_date: dueDate });
     if (!inspection) {
         throw new Error('Inspection not found');
     }
@@ -245,12 +247,12 @@ async function analyzeInspection(inspectionId) {
         for (let room of unit.rooms) {
             for (let item of room.items) {
                 for (let aspect of item.aspects) {
-                    if (aspect.image_url && !aspect.override) {
                         console.log(`Analyzing image for ${room.room_name} - ${item.item_name} - ${aspect.aspect_name}`);
                         try {
                             // if the url is empty, skip the analysis
                             if (aspect.image_url !== "") {
                                 const result = await AI.checkImage(aspect.image_url);
+                                console.log(`Result for ${aspect.aspect_name}: ${result}`);
                                 const scores = AI.parseScores(result);
                             aspect.status = scores.cleanliness; // Update status based on analysis
                             } else {
@@ -260,7 +262,6 @@ async function analyzeInspection(inspectionId) {
                         } catch (error) {
                             console.error(`Error analyzing image for ${aspect.aspect_name}: ${error.message}`);
                         }
-                    }
                 }
             }
         }

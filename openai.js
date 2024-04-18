@@ -10,6 +10,8 @@ async function encodeImage(imagePath) {
 }
 
 async function checkImage(imageUrl) {
+    console.log("Checking image cleanliness...");
+    console.log("Image URL:", imageUrl);
 
     const prompt = `
     ### Cleaning Inspection Analysis Guidelines:

@@ -112,13 +112,13 @@ app.post('/api/overrideAspectStatus', async (req, res) => {
   }
 });
 
-app.get('/api/analyze', async (req, res) => {
+app.get('/api/analyze/:dueDate', async (req, res) => {
+  console.log('Analyzing inspection');
   try {
-      const inspectionId = req.query.id; // Expect an 'id' query parameter with the inspection ID
-      if (!inspectionId) {
-          return res.status(400).json({ message: 'Inspection ID is required' });
+      if (!req.params.dueDate) {
+          return res.status(400).json({ success: false, message: 'Missing due date' });
       }
-      const result = await DB.analyzeInspection(inspectionId);
+      const result = await DB.analyzeInspection(req.params.dueDate);
       res.status(200).json({ success: result, message: 'Analysis completed successfully.' });
   } catch (error) {
       res.status(500).json({ success: false, message: error.message });

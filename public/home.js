@@ -190,8 +190,8 @@ function updateGallery(data) {
         <div class="inspection-date">${entry.due_date}</div>
         <div class="inspection-progress">${svg}</div>
       </div>
-      <div class="photo-button-item" onclick="showPhotos('${entry.due_date}')">
-        <img src="assets/photo-button.svg" alt="Show Photos" />
+      <div class="photo-button-item" onclick="analyzeInspectionData('${entry.due_date}')">
+        <img src="assets/robot.svg" alt="Show Photos" />
       </div>
       <div class="download-button-item" onclick="downloadCSV('${entry.due_date}')">
         <img src="assets/download.svg" alt="Download CSV" />
@@ -202,47 +202,47 @@ function updateGallery(data) {
   });
 }
 
-function showPhotos(date) {
-  console.log("Showing photos for inspection on", date);
-  const data = JSON.parse(localStorage.getItem("myData"));
-  const photos = [];
+// function showPhotos(date) {
+//   console.log("Showing photos for inspection on", date);
+//   const data = JSON.parse(localStorage.getItem("myData"));
+//   const photos = [];
 
-  data.forEach((entry) => {
-    if (entry.due_date === date) {
-      entry.units.forEach((unit) => {
-        unit.rooms.forEach((room) => {
-          room.items.forEach((item) => {
-            item.aspects.forEach((aspect) => {
-              if (aspect.image_url) {
-                photos.push(aspect.image_url);
-              }
-            });
-          });
-        });
-      });
-    }
-  });
+//   data.forEach((entry) => {
+//     if (entry.due_date === date) {
+//       entry.units.forEach((unit) => {
+//         unit.rooms.forEach((room) => {
+//           room.items.forEach((item) => {
+//             item.aspects.forEach((aspect) => {
+//               if (aspect.image_url) {
+//                 photos.push(aspect.image_url);
+//               }
+//             });
+//           });
+//         });
+//       });
+//     }
+//   });
 
-  const photoContainer = document.getElementById("photoContainer");
-  const backButton = document.getElementById("backButton");
+//   const photoContainer = document.getElementById("photoContainer");
+//   const backButton = document.getElementById("backButton");
 
-  photoContainer.style.display = "block"; // Make the container visible
-  backButton.style.display = "block"; // Make the back button visible
-  // Clear the existing images
-  photoContainer.innerHTML = "";
-  photoContainer.appendChild(backButton); // Append the back button to the container
-  if (photos.length === 0) {
-    photoContainer.textContent = "No photos found for this inspection";
-    photoContainer.appendChild(backButton)
-  } else {
-    photos.forEach((url) => {
-      const img = document.createElement("img");
-      img.src = url;
-      img.style.marginRight = "10px"; // Add some space between the images
-      photoContainer.appendChild(img);
-    });
-  }
-}
+//   photoContainer.style.display = "block"; // Make the container visible
+//   backButton.style.display = "block"; // Make the back button visible
+//   // Clear the existing images
+//   photoContainer.innerHTML = "";
+//   photoContainer.appendChild(backButton); // Append the back button to the container
+//   if (photos.length === 0) {
+//     photoContainer.textContent = "No photos found for this inspection";
+//     photoContainer.appendChild(backButton)
+//   } else {
+//     photos.forEach((url) => {
+//       const img = document.createElement("img");
+//       img.src = url;
+//       img.style.marginRight = "10px"; // Add some space between the images
+//       photoContainer.appendChild(img);
+//     });
+//   }
+// }
 
 function downloadCSV(date) {
   const data = JSON.parse(localStorage.getItem("myData"));
@@ -358,8 +358,8 @@ function updateAnalytics(data) {
   }
 }
 
-function analyzeInspectionData() {
-  fetch("http://localhost:3000/api/analyze")
+function analyzeInspectionData(dueDate) {
+  fetch(`http://localhost:3000/api/analyze/${dueDate}`)
       .then(response => {
           if (!response.ok) {
               throw new Error('Network response was not ok');
@@ -377,53 +377,18 @@ function analyzeInspectionData() {
 }
 
 
-function overrideStatus(event, dueDate, unitId, roomName, itemName, aspectName, newStatus) {
-  console.log('Overriding status:', dueDate, unitId, roomName, itemName, aspectName, newStatus);
-  event.preventDefault(); // to stop the form from submitting and reloading the page
-  fetch('http://localhost:3000/api/overrideAspectStatus', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ dueDate, unitId, roomName, itemName, aspectName, newStatus })
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(data => {
-    console.log('Override successful:', data);
-    alert('Status overridden successfully');
-  })
-  .catch(error => {
-    console.error('Error overriding status:', error);
-    alert('Failed to override status: ' + error.message);
-  });
-}
+// document.getElementById("backButton").addEventListener("click", () => {
+//   const photoContainer = document.getElementById("photoContainer");
+//   const backButton = document.getElementById("backButton");
 
+//   photoContainer.style.display = "none"; // Hide the container
+//   backButton.style.display = "none"; // Hide the back button
 
-document.getElementById("backButton").addEventListener("click", () => {
-  const photoContainer = document.getElementById("photoContainer");
-  const backButton = document.getElementById("backButton");
-
-  photoContainer.style.display = "none"; // Hide the container
-  backButton.style.display = "none"; // Hide the back button
-
-  // remove the images from the container
-  while (
-    photoContainer.firstChild &&
-    photoContainer.firstChild !== backButton
-  ) {
-    photoContainer.firstChild.remove();
-  }
-});
-
-
-document.addEventListener('DOMContentLoaded', function() {
-  const analyzeButton = document.getElementById('analyzeButton');
-  if (analyzeButton) {
-      analyzeButton.addEventListener('click', analyzeInspectionData);
-  }
-});
+//   // remove the images from the container
+//   while (
+//     photoContainer.firstChild &&
+//     photoContainer.firstChild !== backButton
+//   ) {
+//     photoContainer.firstChild.remove();
+//   }
+// });
