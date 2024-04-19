@@ -192,6 +192,32 @@ async function addResident(residentData) {
   return resident;
 }
 
+function getRandomImageUrl() {
+  const imageUrls = [
+    // Fill this array with your image URLs
+    "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_10.jpg",
+    "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_1.jpg",
+    "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_2.jpg",
+    "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_3.jpg",
+    "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_4.jpg",
+    "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_5.jpg",
+    "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_11.jpg",
+    "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_12.jpg",
+    "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_15.jpg",
+    "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_14.jpg",
+    "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_13.jpg",
+    "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_17.jpg",
+    "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_18.jpg",
+    "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_19.jpg",
+    "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_20.jpg",
+
+    // ...
+  ];
+
+  const randomIndex = Math.floor(Math.random() * imageUrls.length);
+  return imageUrls[randomIndex];
+}
+
 async function createInspection(dueDate, userId) {
   try {
     // Fetch units from the database that belong to the specified user
@@ -201,6 +227,8 @@ async function createInspection(dueDate, userId) {
       console.log("No units found for this user:", userId);
       return; // Optionally handle the case where no units are found
     }
+
+ 
 
     // Map units to format them for the inspection
     const formattedUnits = units.map((unit) => ({
@@ -215,8 +243,7 @@ async function createInspection(dueDate, userId) {
             // Initialize defaults
             status: 1, // Assuming status 1 means 'OK'
             override: false,
-            image_url:
-              "https://checktaiphotos.s3.us-east-2.amazonaws.com/photo_10.jpg",
+            image_url: getRandomImageUrl(),
           })),
         })),
       })),
@@ -412,9 +439,9 @@ async function deleteUser(req, res, next) {
   try {
     const result = await User.findByIdAndDelete(req.user._id);
     if (!result) {
-      return res.status(404).send('User not found');
+      return res.status(404).send("User not found");
     }
-    return res.status(200).send('User deleted successfully');
+    return res.status(200).send("User deleted successfully");
   } catch (error) {
     console.error("Error deleting user:", error);
     if (res) {
@@ -478,48 +505,58 @@ async function loadSampleUnits(req, res) {
 
 async function generateSampleChatsForUser(req, res, next) {
   if (!req.user) {
-      return res.status(401).send("Authentication required");
+    return res.status(401).send("Authentication required");
   }
 
   try {
-      const userId = req.user._id;  // Directly use the authenticated user's ID from the request object
+    const userId = req.user._id; // Directly use the authenticated user's ID from the request object
 
-      // Find all residents associated with the user ID
-      const residents = await Resident.find({ user_id: userId });
+    // Find all residents associated with the user ID
+    const residents = await Resident.find({ user_id: userId });
 
-      // Iterate over each resident to create chat histories
-      for (let resident of residents) {
-          // Fetch the unit associated with the resident
-          const unit = await Unit.findById(resident.unit_id);
-          if (!unit) continue;  // If no unit found, skip to next resident
+    let chats = [];
+    // Iterate over each resident to create chat histories
+    for (let resident of residents) {
+      // Fetch the unit associated with the resident
+      const unit = await Unit.findById(resident.unit_id);
+      if (!unit) continue; // If no unit found, skip to next resident
 
-          // Create a sample chat for each resident
-          const chat = new Chat({
-              resident_id: resident._id,
-              resident_name: resident.resident_name,
-              unit_id: unit._id,
-              unit_name: unit.unit_number,
-              lastActive: new Date().toISOString(),
-              messages: [
-                  { type: "received", content: "Hi, Can you review this photo?" },
-                  { type: "photo", src: "assets/fail-image.svg", alt: "Failed Image" },
-                  { type: "sent", content: "Hello!" },
-                  { type: "sent", content: "Sure! Let me give it a look." },
-                  { type: "photo", src: "assets/pass-image.svg", alt: "Passed Image" },
-                  { type: "status", content: "Congrats! The photo has been approved" }
-              ]
-          });
+      // Create a sample chat for each resident
+      const chat = new Chat({
+        resident_id: resident._id,
+        resident_name: resident.resident_name,
+        unit_id: unit._id,
+        unit_name: unit.unit_number,
+        lastActive: new Date().toISOString(),
+        messages: [
+          { type: "received", content: "Hi, Can you review this photo?" },
+          { type: "photo", src: "assets/fail-image.svg", alt: "Failed Image" },
+          { type: "sent", content: "Hello!" },
+          { type: "sent", content: "Sure! Let me give it a look." },
+          { type: "photo", src: "assets/pass-image.svg", alt: "Passed Image" },
+          { type: "status", content: "Congrats! The photo has been approved" },
+        ],
+      });
 
-          // Save the chat history to the database
-          await chat.save();
-          console.log(`Chat history created for resident ${resident.resident_name}`);
-      }
-      
-      res.status(200).send("Chat histories generated successfully");
-  }
-  catch (error) {
-      console.error("Failed to generate chat histories:", error);
-      res.status(500).json({ error: "Failed to generate chat histories", details: error.message });
+      // Save the chat history to the database
+      chats.push(chat);
+      console.log(
+        `Chat history created for resident ${resident.resident_name}`
+      );
+    }
+    // Save all chat histories for the user
+    const chatHistory = new Chats({ user_id: userId, chats });
+    await chatHistory.save();
+    // In your server-side function
+    res.status(200).json({ message: "Chat histories generated successfully" });
+  } catch (error) {
+    console.error("Failed to generate chat histories:", error);
+    res
+      .status(500)
+      .json({
+        error: "Failed to generate chat histories",
+        details: error.message,
+      });
   }
 }
 
@@ -541,5 +578,5 @@ module.exports = {
   addMessage,
   fetchChats,
   deleteUser,
-  generateSampleChatsForUser
+  generateSampleChatsForUser,
 };

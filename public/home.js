@@ -113,8 +113,10 @@ function generateDynamicSVG(numberPassed, numberFailed, numberRemaining) {
 function updateGallery(data) {
   const galleryContainer = document.querySelector(".gallery-grid");
   const inspectionContainer = document.querySelector(".inspection-section");
+  
   galleryContainer.innerHTML = ""; // Clear existing content
 
+  let totalPassed = 0, totalFailed = 0, totalRemaining = 0;
   // Check if data is an array and has content
   if (!data || !Array.isArray(data)) {
     console.error("Data is undefined or not an array");
@@ -138,10 +140,6 @@ function updateGallery(data) {
         console.error("Rooms are undefined or not an array in", unit);
         return;
       }
-
-      let totalPassed = 0,
-        totalFailed = 0,
-        totalRemaining = 0;
 
       // Iterate over each room
       unit.rooms.forEach((room) => {
@@ -199,7 +197,34 @@ function updateGallery(data) {
         });
       });
 
-      const svg = generateDynamicSVG(totalPassed, totalFailed, totalRemaining);
+      localStorage.setItem("totalPassed", totalPassed);
+      localStorage.setItem("totalFailed", totalFailed);
+      localStorage.setItem("totalRemaining", totalRemaining);
+    });
+  });
+
+  updateInspections(data);
+}
+
+function updateInspections(data) {
+  const totalPassed = parseInt(localStorage.getItem("totalPassed"), 10);
+  const totalFailed = parseInt(localStorage.getItem("totalFailed"), 10);
+  const totalRemaining = parseInt(localStorage.getItem("totalRemaining"), 10);
+
+  const inspectionContainer = document.querySelector(".inspection-section");
+  inspectionContainer.innerHTML = ""; // Clear existing content
+
+  // Assuming `totalPassed`, `totalFailed`, and `totalRemaining` are correctly calculated
+  // Check if data is an array and has content
+  if (!data || !Array.isArray(data)) {
+    console.error("Data is undefined or not an array");
+    return;
+  }
+
+  // Iterate over each entry in the data array
+  const due_date = data.due_date;
+
+  const svg = generateDynamicSVG(totalPassed, totalFailed, totalRemaining);
       const div = document.createElement("div");
       div.className = "row-container";
       div.innerHTML = `
@@ -215,8 +240,6 @@ function updateGallery(data) {
       </div>
     `;
       inspectionContainer.appendChild(div);
-    });
-  });
 }
 
 
@@ -388,37 +411,44 @@ function createSampleUnits() {
 document.getElementById('createInspectionButton').addEventListener('click', createInspectionForSampleUnits);
 
 function createInspectionForSampleUnits() {
-    // Assuming you already have some sample units data stored or you know the user ID etc.
-    const dueDate = new Date().toISOString().slice(0, 10); // e.g., '2023-09-15'
-    const userId = localStorage.getItem("userId"); // Ensure the user ID is stored in localStorage or obtained dynamically
+  // Query the user for a due date
+  const dueDate = prompt("Please enter a due date for the inspection (YYYY-MM-DD):");
 
-    fetch(`${API_BASE_URL}/api/inspections`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-            dueDate: dueDate,
-            userId: userId // Send the user ID whose units you want to inspect
-        }),
-        credentials: 'include' // Include cookies for authentication if necessary
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Inspection created successfully:', data);
-        alert("Inspection created successfully!");
-        // You might want to update the UI or fetch new data here
-    })
-    .catch(error => {
-        console.error('Failed to create inspection:', error);
-        alert("Failed to create inspection: " + error.message);
-    });
+  // Validate the due date
+  if (!dueDate || !/^(\d{4})-(\d{2})-(\d{2})$/.test(dueDate)) {
+      alert("Invalid due date. Please enter a date in the format YYYY-MM-DD.");
+      return;
+  }
+
+  const userId = localStorage.getItem("userId"); // Ensure the user ID is stored in localStorage or obtained dynamically
+
+  fetch(`${API_BASE_URL}/api/inspections`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+          dueDate: dueDate,
+          userId: userId // Send the user ID whose units you want to inspect
+      }),
+      credentials: 'include' // Include cookies for authentication if necessary
+  })
+  .then(response => {
+      if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+  })
+  .then(data => {
+      console.log('Inspection created successfully:', data);
+      alert("Inspection created successfully!");
+      // You might want to update the UI or fetch new data here
+  })
+  .catch(error => {
+      console.error('Failed to create inspection:', error);
+      alert("Failed to create inspection: " + error.message);
+  });
 }
 
 // Example of calling createSampleUnits on button click or as needed

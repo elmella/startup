@@ -2,15 +2,16 @@
   box-sizing: border-box;
 }
 
-body, html {
+body,
+html {
   height: 100%;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   background-color: #f8f8f8;
   overflow: hidden;
 }
 
 .sidebar {
-  width: 250px;
+  flex: 0 0 250px;
   background-color: #fff;
   padding: 1rem;
   height: 100vh;
@@ -55,7 +56,8 @@ body, html {
   background-color: #e8e8e8;
 }
 
-.main-nav ul li a.active, .main-nav ul li a.home-tab {
+.main-nav ul li a.active,
+.main-nav ul li a.home-tab {
   font-weight: bold;
   color: #4caf50;
   background-color: #f0f0f0;
@@ -71,7 +73,7 @@ body, html {
 }
 
 #backButton {
-  background-color: #4CAF50; /* Green */
+  background-color: #4caf50; /* Green */
   border: none;
   color: white;
   padding: 15px 32px;
@@ -94,7 +96,6 @@ body, html {
   flex-direction: column;
   height: 85vh;
 }
-
 
 .inspection-section {
   display: grid;
@@ -160,8 +161,6 @@ body, html {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-
-
 }
 .download-button-item {
   flex: 1;
@@ -169,7 +168,6 @@ body, html {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-
 }
 
 .photo-button-item img {
@@ -177,13 +175,11 @@ body, html {
   width: 3vw;
   height: 3vw;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-
 }
 .download-button-item img {
   object-fit: cover;
   width: 3vw;
   height: 3vw;
-
 }
 
 .inspection-progress {
@@ -273,7 +269,7 @@ h6,
   width: 90%;
   height: 90%;
   text-align: center;
-  line-height: .8;
+  line-height: 0.8;
 }
 
 .gallery-item:hover figcaption {
@@ -286,8 +282,9 @@ h6,
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-right: 20px;
   border: 2px solid transparent;
-  
 
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .analytics-section:hover {
@@ -389,7 +386,6 @@ h6,
   height: 20px;
 }
 
-
 #loadingIcon {
   position: fixed;
   left: 0;
@@ -412,10 +408,13 @@ h6,
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
-
 
 .analytics-svg-container {
   display: flex;
@@ -428,7 +427,6 @@ h6,
   margin: 20px 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 
 .analytics-svg-container svg {
   width: 80%;
@@ -454,9 +452,8 @@ h2 {
   align-self: center;
 }
 
-
 #createSampleButton {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   border: none;
   color: white;
   padding: 15px 32px;
@@ -468,7 +465,7 @@ h2 {
 }
 
 #createInspectionButton {
-  background-color: #008CBA;
+  background-color: #008cba;
   border: none;
   color: white;
   padding: 15px 32px;

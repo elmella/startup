@@ -200,20 +200,8 @@ apiRouter.get("/chats/:chatId", async (req, res) => {
 app.use("/api", apiRouter);
 
 // Start the server
-app.listen(PORT, () => {
+const httpService = app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
 
 peerProxy(httpService);
-
-function getHomeData(req, res, next) {
-  fs.readFile("data/data.json", "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error reading data");
-    } else {
-      req.data = JSON.parse(data);
-      next();
-    }
-  });
-}
